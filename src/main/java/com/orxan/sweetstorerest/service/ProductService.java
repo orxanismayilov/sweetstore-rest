@@ -1,14 +1,13 @@
 package com.orxan.sweetstorerest.service;
 
-/*import javafx.collections.ObservableList;
-import sample.model.Product;
+import com.orxan.sweetstorerest.model.Product;
 
 import java.util.List;
-import java.util.Map;*/
+import java.util.Map;
 
 public interface ProductService {
 
-    /*ObservableList getProductList(int pageIndex, int rowsPerPage);
+    List<Product> getProductList(int pageIndex, int rowsPerPage);
 
     Map addProduct(Product product);
 
@@ -20,7 +19,5 @@ public interface ProductService {
 
     Product getProductById(int id);
 
-    ObservableList getProductListForComboBox();
-
-    int getTotalCountOfProduct();*/
+    int getTotalCountOfProduct();
 }
