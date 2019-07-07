@@ -22,11 +22,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Map addProduct(Product product) {
+        productDao.addProduct(product);
         return null;
     }
 
     @Override
     public Map updateProduct(Product product, int oldProductId) {
+        productDao.updateProduct(product,oldProductId);
         return null;
     }
 
@@ -37,6 +39,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean deleteProductByID(int id) {
+        productDao.deleteProductById(id);
         return false;
     }
 
