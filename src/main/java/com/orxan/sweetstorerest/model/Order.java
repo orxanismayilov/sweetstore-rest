@@ -2,11 +2,12 @@ package com.orxan.sweetstorerest.model;
 
 import com.orxan.sweetstorerest.enums.OrderStatus;
 import com.orxan.sweetstorerest.enums.OrderType;
+import org.springframework.hateoas.ResourceSupport;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Order {
+public class Order extends ResourceSupport {
     private String customerName;
     private String customerAddress;
     private String description;

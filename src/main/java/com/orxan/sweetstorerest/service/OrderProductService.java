@@ -1,19 +1,21 @@
 package com.orxan.sweetstorerest.service;
 
-/*import javafx.collections.ObservableList;
-import sample.model.OrderProduct;
+import com.orxan.sweetstorerest.model.OrderProduct;
 
-import java.util.Map;*/
+import java.util.List;
+import java.util.Map;
 
 public interface OrderProductService {
 
-    /*void saveOrderProduct(OrderProduct orderProduct);
+    void saveOrderProduct(OrderProduct orderProduct);
 
-    void removeOrderProductById(OrderProduct orderProduct, int id);
+    void removeOrderProductById(int id);
 
-    ObservableList getOrderProductByOrderId(int orderId);
+    OrderProduct getOrderProduct(int id);
+
+    List<OrderProduct> getOrderProductByOrderId(int orderId);
 
     void updateOrderProduct(OrderProduct newOrderProduct, int id);
 
-    Map validateOrderProduct(OrderProduct orderProduct);*/
+    Map validateOrderProduct(OrderProduct orderProduct);
 }

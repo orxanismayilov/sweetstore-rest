@@ -2,7 +2,9 @@ package com.orxan.sweetstorerest.controller;
 
 import com.orxan.sweetstorerest.model.Order;
 import com.orxan.sweetstorerest.service.OrderService;
+import com.orxan.sweetstorerest.util.OrderResourceAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +14,8 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private OrderResourceAssembler orderResourceAssembler;
 
     @GetMapping("/orders")
     public List<Order> getAllOrders(@RequestParam int startPage,
@@ -20,8 +24,9 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{id}")
-    public Order getOrder(@PathVariable  int id) {
-        return orderService.getOrder(id);
+    public Resource<Order> getOrder(@PathVariable  int id) {
+        Order order= orderService.getOrder(id);
+        return orderResourceAssembler.toResource(order);
     }
 
     @PostMapping("/orders")
