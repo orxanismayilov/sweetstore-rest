@@ -1,15 +1,16 @@
 package com.orxan.sweetstorerest.service;
 
-/*import javafx.collections.ObservableList;
-import sample.model.Order;*/
+import com.orxan.sweetstorerest.model.Order;
 
 import java.util.List;
 
 public interface OrderService {
 
-    /*ObservableList getOrderList(int pageIndex, int rowsPerPage);
+    List<Order> getOrderList(int pageIndex, int rowsPerPage);
 
     int addNewOrderToList(Order order);
+
+    Order getOrder(int id);
 
     List<Order> searchOrderById(String id, boolean searchAll);
 
@@ -17,5 +18,5 @@ public interface OrderService {
 
     void updateOrderById(Order newOrder, int orderId);
 
-    int getTotalCountOfOrder();*/
+    int getTotalCountOfOrder();
 }

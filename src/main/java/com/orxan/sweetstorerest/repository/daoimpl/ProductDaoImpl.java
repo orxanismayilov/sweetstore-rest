@@ -115,7 +115,6 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public void updateProductIncreaseQuantity(Product newProduct, int id) {
-
     }
 
     @Override
@@ -136,6 +135,27 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product getProductById(int id) {
+        String sql="SELECT * FROM  PRODUCTS WHERE id=? and is_active=1";
+        try (Connection connection=DBConnection.getConnection();
+             PreparedStatement ps=connection.prepareStatement(sql)){
+            ps.setInt(1,id);
+            try (ResultSet rs=ps.executeQuery()){
+                while (rs.next()) {
+                    Product product=new Product();
+                    product.setId(rs.getInt("id"));
+                    product.setName(rs.getString("name"));
+                    product.setPrice(rs.getFloat("price"));
+                    product.setUpdateDate(rs.getTimestamp("update_date").toLocalDateTime());
+                    product.setQuantity(rs.getInt("quantity"));
+                    product.setActive(true);
+                    return product;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
