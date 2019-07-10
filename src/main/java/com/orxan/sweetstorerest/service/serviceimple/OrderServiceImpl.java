@@ -16,7 +16,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getOrderList(int pageIndex, int rowsPerPage) {
-        return orderDao.getOrderList(pageIndex,rowsPerPage);
+        int totalCount=orderDao.getTotalCount();
+        int fromIndex=pageIndex*rowsPerPage;
+        int toIndex=Math.min(fromIndex+rowsPerPage,totalCount);
+        return orderDao.getOrderList(fromIndex,toIndex);
     }
 
     @Override
@@ -43,10 +46,5 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void updateOrderById(Order newOrder, int orderId) {
         orderDao.updateOrder(newOrder,orderId);
-    }
-
-    @Override
-    public int getTotalCountOfOrder() {
-        return orderDao.getTotalCountOfOrder();
     }
 }

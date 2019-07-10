@@ -18,9 +18,8 @@ public class OrderController {
     private OrderResourceAssembler orderResourceAssembler;
 
     @GetMapping("/orders")
-    public List<Order> getAllOrders(@RequestParam int startPage,
-                                    @RequestParam int rowsPerPage) {
-       return orderService.getOrderList(startPage,rowsPerPage);
+    public List<Order> getAllOrders(@RequestParam int pageIndex, @RequestParam int maxRows) {
+       return orderService.getOrderList(pageIndex,maxRows);
     }
 
     @GetMapping("/orders/{id}")

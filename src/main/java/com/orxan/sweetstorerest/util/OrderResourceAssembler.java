@@ -15,6 +15,6 @@ public class OrderResourceAssembler implements ResourceAssembler<Order , Resourc
     public Resource<Order> toResource(Order order) {
         return new Resource<>(order,
                 linkTo(methodOn(OrderController.class).getOrder(order.getTransactionID())).withSelfRel(),
-                linkTo(OrderController.class).slash("orders").withRel("orders"));
+                linkTo(methodOn(OrderController.class)).slash("orders").withRel("orders"));
     }
 }

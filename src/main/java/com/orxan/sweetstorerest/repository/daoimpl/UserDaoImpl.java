@@ -42,7 +42,7 @@ public class UserDaoImpl implements UserDao {
                      u.setId(rs.getInt("id"));
                      u.setName(rs.getString("name"));
                      u.setActive(rs.getBoolean("is_active"));
-                     u.setPassword(rs.getString("password"));
+                     u.setPassword(rs.getString("maindb.password"));
                      u.setRole(UserRole.valueOf(rs.getString("role")));
                      return authcateUserPassword(u,user.getPassword());
                  }

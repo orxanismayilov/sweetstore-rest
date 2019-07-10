@@ -17,6 +17,4 @@ public interface OrderService {
     boolean deleteOrderByTransactionId(int transactionId);
 
     void updateOrderById(Order newOrder, int orderId);
-
-    int getTotalCountOfOrder();
 }

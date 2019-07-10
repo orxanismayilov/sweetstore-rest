@@ -10,7 +10,7 @@ public interface OrderDao {
 
     int addOrder(Order order) ;
 
-    Order getOrder (int id);
+    Object getOrder (int id);
 
     void updateOrder(Order newOrder, int oldOrderId);
 
@@ -18,5 +18,5 @@ public interface OrderDao {
 
     List<Order> searchOrderById(String id, boolean searchAll);
 
-    int getTotalCountOfOrder() ;
+    int getTotalCount();
 }
