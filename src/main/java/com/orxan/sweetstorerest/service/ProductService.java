@@ -18,6 +18,4 @@ public interface ProductService {
     boolean deleteProductByID(int id);
 
     Product getProductById(int id);
-
-    int getTotalCountOfProduct();
 }

@@ -17,7 +17,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getProductList(int pageIndex, int rowsPerPage) {
-        return productDao.getProductList(pageIndex,rowsPerPage);
+        int totalCount= getTotalCountOfProduct();
+        int fromIndex=pageIndex*rowsPerPage;
+        int toIndex=Math.min(fromIndex+rowsPerPage,totalCount);
+        return productDao.getProductList(fromIndex,toIndex);
     }
 
     @Override
@@ -48,8 +51,7 @@ public class ProductServiceImpl implements ProductService {
         return productDao.getProductById(id);
     }
 
-    @Override
-    public int getTotalCountOfProduct() {
-        return 0;
+    private int getTotalCountOfProduct() {
+        return productDao.getTotalCountOfProduct();
     }
 }
