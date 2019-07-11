@@ -1,0 +1,29 @@
+package com.orxan.sweetstorerest.config;
+
+import com.orxan.sweetstorerest.util.LoadPropertyUtil;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import javax.sql.DataSource;
+import java.util.Properties;
+
+@Configuration
+@ComponentScan("com.orxan.sweetstorerest")
+public class SpringJdbcConfig {
+    private static String DB_PROPERTY_URL ="C:\\Users\\Orxan\\Desktop\\projects\\sweetstore-rest\\src\\main\\resources\\properties\\db.properties";
+    private static Properties dbProperties;
+
+    @Bean
+    public DataSource mysqlDataSource() {
+        dbProperties= LoadPropertyUtil.loadPropertiesFile(DB_PROPERTY_URL);
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(dbProperties.getProperty("maindb.driver"));
+        dataSource.setUrl(dbProperties.getProperty("maindb.url"));
+        dataSource.setUsername(dbProperties.getProperty("maindb.user"));
+        dataSource.setPassword(dbProperties.getProperty("maindb.password"));
+
+        return dataSource;
+    }
+}

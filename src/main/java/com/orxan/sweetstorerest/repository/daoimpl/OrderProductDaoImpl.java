@@ -1,23 +1,27 @@
 package com.orxan.sweetstorerest.repository.daoimpl;
 
+import com.orxan.sweetstorerest.mappers.OrderProductMapper;
 import com.orxan.sweetstorerest.model.OrderProduct;
 import com.orxan.sweetstorerest.repository.OrderProductDao;
 import com.orxan.sweetstorerest.util.DBConnection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class OrderProductDaoImpl implements OrderProductDao {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @Override
     public List<OrderProduct> getListByOrderId(int orderId) {
-        List<OrderProduct> orderProductsList=new ArrayList<>();
+
         String sql = "select \n" +
                 "ORDER_PRODUCT.id,ORDER_PRODUCT.order_Id,ORDER_PRODUCT.product_id,PRODUCTS.name,ORDER_PRODUCT.price,ORDER_PRODUCT.quantity,\n" +
                 "ORDER_PRODUCT.total_price,ORDER_PRODUCT.discount,ORDER_PRODUCT.description\n" +
@@ -25,32 +29,7 @@ public class OrderProductDaoImpl implements OrderProductDao {
                 "ORDER_PRODUCT  \n" +
                 "inner join PRODUCTS  on ORDER_PRODUCT.product_id=PRODUCTS.id \n" +
                 "where order_id=? and ORDER_PRODUCT.is_active=1";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, orderId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    OrderProduct orderProduct = new OrderProduct();
-                    orderProduct.setId(rs.getInt("id"));
-                    orderProduct.setOrderId(rs.getInt("order_id"));
-                    orderProduct.setProductId(rs.getInt("product_id"));
-                    orderProduct.setProductName(rs.getString("name"));
-                    orderProduct.setProductPrice(rs.getFloat("price"));
-                    orderProduct.setProductQuantity(rs.getInt("quantity"));
-                    orderProduct.setTotalPrice(new BigDecimal(String.valueOf(rs.getFloat("total_price"))));
-                    orderProduct.setDiscount(rs.getFloat("discount"));
-                    orderProduct.setDescription(rs.getString("description"));
-                    orderProduct.setActive(true);
-                    orderProductsList.add(orderProduct);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return orderProductsList;
+       return jdbcTemplate.query(sql,new OrderProductMapper(),orderId);
     }
 
     @Override
@@ -82,59 +61,18 @@ public class OrderProductDaoImpl implements OrderProductDao {
                 "ORDER_PRODUCT  \n" +
                 "inner join PRODUCTS  on ORDER_PRODUCT.product_id=PRODUCTS.id \n" +
                 "where ORDER_PRODUCT.id=? and ORDER_PRODUCT.is_active=1";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    OrderProduct orderProduct = new OrderProduct();
-                    orderProduct.setId(rs.getInt("id"));
-                    orderProduct.setOrderId(rs.getInt("order_id"));
-                    orderProduct.setProductId(rs.getInt("product_id"));
-                    orderProduct.setProductName(rs.getString("name"));
-                    orderProduct.setProductPrice(rs.getFloat("price"));
-                    orderProduct.setProductQuantity(rs.getInt("quantity"));
-                    orderProduct.setTotalPrice(new BigDecimal(String.valueOf(rs.getFloat("total_price"))));
-                    orderProduct.setDiscount(rs.getFloat("discount"));
-                    orderProduct.setDescription(rs.getString("description"));
-                    orderProduct.setActive(true);
-                    return orderProduct;
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return (OrderProduct) jdbcTemplate.queryForObject(sql,new OrderProductMapper(),id);
     }
 
     @Override
     public void removeOrderProductById(int id) {
         String sql = "UPDATE ORDER_PRODUCT set is_active=0 where id=?";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        jdbcTemplate.update(sql,id);
     }
 
     @Override
-    public void updateOrderProduct(OrderProduct newOrderProduct, int id) {
+    public void updateOrderProduct(OrderProduct orderProduct, int id) {
         String sql = "UPDATE ORDER_PRODUCT set quantity=?,discount=?,total_price=?,description=? where Id = ? ";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement psOrderProduct = con.prepareStatement(sql)) {
-            psOrderProduct.setInt(1, newOrderProduct.getProductQuantity());
-            psOrderProduct.setFloat(2, newOrderProduct.getDiscount());
-            psOrderProduct.setFloat(3, newOrderProduct.getTotalPrice().floatValue());
-            psOrderProduct.setString(4, newOrderProduct.getDescription());
-            psOrderProduct.setInt(5, id);
-            psOrderProduct.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        jdbcTemplate.update(sql,orderProduct.getProductQuantity(),orderProduct.getDiscount(),orderProduct.getTotalPrice(),orderProduct.getDescription(),id);
     }
 }
