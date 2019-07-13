@@ -3,6 +3,8 @@ package com.orxan.sweetstorerest.controller;
 import com.orxan.sweetstorerest.model.Product;
 import com.orxan.sweetstorerest.service.serviceimple.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -21,9 +23,12 @@ public class ProductController {
         return productList;
     }
 
+
     @GetMapping("/products/{id}")
-    public Product getProduct(@PathVariable int id) {
-        return productService.getProductById(id);
+    public ResponseEntity<Product> getProduct(@PathVariable int id) {
+       Product product=productService.getProductById(id);
+        if (product==null) return new ResponseEntity<>(HttpStatus.INSUFFICIENT_STORAGE);
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping("/products")

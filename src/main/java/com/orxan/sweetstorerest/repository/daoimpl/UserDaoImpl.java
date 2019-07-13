@@ -5,6 +5,7 @@ import com.orxan.sweetstorerest.model.User;
 import com.orxan.sweetstorerest.repository.UserDao;
 import com.orxan.sweetstorerest.util.PasswordAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -35,8 +36,12 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean validateLogin(User user) {
         String sql="SELECT * FROM USERS WHERE name=? AND  is_active=1";
-        User u= (User) jdbcTemplate.queryForObject(sql,new UserMapper(),user.getName());
-        return  authcateUserPassword(u,user.getPassword());
+        try {
+            User u= (User) jdbcTemplate.queryForObject(sql,new UserMapper(),user.getName());
+            return  authcateUserPassword(u,user.getPassword());
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
 
     private boolean authcateUserPassword(User user, String password) {

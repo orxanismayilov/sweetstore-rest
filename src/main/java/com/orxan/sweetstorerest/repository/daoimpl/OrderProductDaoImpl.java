@@ -5,6 +5,7 @@ import com.orxan.sweetstorerest.model.OrderProduct;
 import com.orxan.sweetstorerest.repository.OrderProductDao;
 import com.orxan.sweetstorerest.util.DBConnection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -61,7 +62,11 @@ public class OrderProductDaoImpl implements OrderProductDao {
                 "ORDER_PRODUCT  \n" +
                 "inner join PRODUCTS  on ORDER_PRODUCT.product_id=PRODUCTS.id \n" +
                 "where ORDER_PRODUCT.id=? and ORDER_PRODUCT.is_active=1";
-        return (OrderProduct) jdbcTemplate.queryForObject(sql,new OrderProductMapper(),id);
+       try {
+           return (OrderProduct) jdbcTemplate.queryForObject(sql,new OrderProductMapper(),id);
+       } catch (EmptyResultDataAccessException e) {
+           return null;
+       }
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.orxan.sweetstorerest.model;
 import java.time.LocalDateTime;
 
 public class Product {
+
     private int id;
     private String name;
     private int quantity;

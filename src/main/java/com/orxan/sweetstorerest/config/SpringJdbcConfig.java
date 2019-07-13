@@ -19,10 +19,10 @@ public class SpringJdbcConfig {
     public DataSource mysqlDataSource() {
         dbProperties= LoadPropertyUtil.loadPropertiesFile(DB_PROPERTY_URL);
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(dbProperties.getProperty("maindb.driver"));
-        dataSource.setUrl(dbProperties.getProperty("maindb.url"));
-        dataSource.setUsername(dbProperties.getProperty("maindb.user"));
-        dataSource.setPassword(dbProperties.getProperty("maindb.password"));
+        dataSource.setDriverClassName(dbProperties.getProperty("localedb.driver"));
+        dataSource.setUrl(dbProperties.getProperty("localedb.url"));
+        dataSource.setUsername(dbProperties.getProperty("localedb.user"));
+        dataSource.setPassword(dbProperties.getProperty("localedb.password"));
 
         return dataSource;
     }

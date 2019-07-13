@@ -4,6 +4,7 @@ import com.orxan.sweetstorerest.mappers.OrderMapper;
 import com.orxan.sweetstorerest.model.Order;
 import com.orxan.sweetstorerest.repository.OrderDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -54,7 +55,12 @@ public class OrderDaoImpl implements OrderDao {
     public Order getOrder(int id) {
         System.out.println(getTotalCount());
         String sql = "SELECT * FROM ORDER_DETAILS WHERE is_active=1 and id=?;";
-        return (Order) jdbcTemplate.queryForObject(sql,new OrderMapper(),id);
+        try {
+            return (Order) jdbcTemplate.queryForObject(sql,new OrderMapper(),id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
     }
 
     @Override

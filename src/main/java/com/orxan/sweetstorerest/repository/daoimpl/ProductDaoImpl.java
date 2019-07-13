@@ -1,10 +1,10 @@
 package com.orxan.sweetstorerest.repository.daoimpl;
 
 import com.orxan.sweetstorerest.mappers.ProductMapper;
-import com.orxan.sweetstorerest.mappers.UserMapper;
 import com.orxan.sweetstorerest.model.Product;
 import com.orxan.sweetstorerest.repository.ProductDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +20,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> getProductList(int startIndex, int toIndex) {
         String sql = "SELECT * FROM PRODUCTS where is_active=1 ORDER BY id DESC Limit ?,? ";
-        return jdbcTemplate.query(sql,new UserMapper(),startIndex,toIndex);
+        return jdbcTemplate.query(sql,new ProductMapper(),startIndex,toIndex);
     }
 
     @Override
@@ -55,7 +55,11 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Product getProductById(int id) {
         String sql="SELECT * FROM  PRODUCTS WHERE id=? and is_active=1";
-        return (Product) jdbcTemplate.queryForObject(sql,new ProductMapper(),id);
+        try {
+            return (Product) jdbcTemplate.queryForObject(sql,new ProductMapper(),id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
