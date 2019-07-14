@@ -10,11 +10,13 @@ public interface OrderService {
 
     int addNewOrderToList(Order order);
 
-    Order getOrder(int id);
-
     List<Order> searchOrderById(String id, boolean searchAll);
+
+    Order getOrder(int id);
 
     boolean deleteOrderByTransactionId(int transactionId);
 
     void updateOrderById(Order newOrder, int orderId);
+
+    int getTotalCountOfOrder();
 }

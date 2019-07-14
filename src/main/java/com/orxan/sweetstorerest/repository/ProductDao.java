@@ -6,7 +6,10 @@ import java.util.List;
 
 public interface ProductDao {
 
+
     List<Product> getProductList(int pageIndex, int rowsPerPage);
+
+    List<Product> getProductListForComboBox();
 
     void addProduct(Product product);
 

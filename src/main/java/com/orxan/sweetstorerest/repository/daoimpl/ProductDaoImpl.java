@@ -24,6 +24,12 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public List<Product> getProductListForComboBox() {
+        String sql="SELECT * FROM PRODUCTS WHERE is_active=1 AND quantity>0 ORDER BY NAME ASC;";
+        return jdbcTemplate.query(sql,new ProductMapper());
+    }
+
+    @Override
     public void addProduct(Product product) {
         String sql = "INSERT INTO PRODUCTS (Name,Quantity,Price,Update_Date,updated_by,Is_Active) VALUES (?,?,?,?,?,?)";
         jdbcTemplate.update(sql,product.getName(),product.getPrice(),product.getUpdateDate()==null ? product.getUpdateDate():LocalDateTime.now(),

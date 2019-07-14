@@ -51,7 +51,13 @@ public class ProductServiceImpl implements ProductService {
         return productDao.getProductById(id);
     }
 
-    private int getTotalCountOfProduct() {
+    @Override
+    public List<Product> getProductListForComboBox() {
+        return productDao.getProductListForComboBox();
+    }
+
+    @Override
+    public int getTotalCountOfProduct() {
         return productDao.getTotalCountOfProduct();
     }
 }

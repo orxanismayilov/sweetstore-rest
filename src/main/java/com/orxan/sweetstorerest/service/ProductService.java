@@ -18,4 +18,8 @@ public interface ProductService {
     boolean deleteProductByID(int id);
 
     Product getProductById(int id);
+
+    List<Product> getProductListForComboBox();
+
+    int getTotalCountOfProduct();
 }

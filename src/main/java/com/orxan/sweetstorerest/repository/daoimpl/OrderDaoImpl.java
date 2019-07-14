@@ -53,7 +53,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public Order getOrder(int id) {
-        System.out.println(getTotalCount());
+        System.out.println(getTotalCountOfOrder());
         String sql = "SELECT * FROM ORDER_DETAILS WHERE is_active=1 and id=?;";
         try {
             return (Order) jdbcTemplate.queryForObject(sql,new OrderMapper(),id);
@@ -83,7 +83,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public int getTotalCount() {
+    public int getTotalCountOfOrder() {
         return jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM ORDER_DETAILS where is_active=1", Integer.class);
     }

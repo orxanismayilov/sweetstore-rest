@@ -1,9 +1,9 @@
 package com.orxan.sweetstorerest.controller;
 
+import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.Product;
 import com.orxan.sweetstorerest.service.serviceimple.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +27,10 @@ public class ProductController {
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable int id) {
        Product product=productService.getProductById(id);
-        if (product==null) return new ResponseEntity<>(HttpStatus.INSUFFICIENT_STORAGE);
-        return ResponseEntity.ok(product);
+       if (product==null) {
+           throw new ResourceNotFoundException("Product not found." +id);
+       }
+       return ResponseEntity.ok(product);
     }
 
     @PostMapping("/products")

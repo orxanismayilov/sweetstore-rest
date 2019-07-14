@@ -10,13 +10,15 @@ public interface OrderDao {
 
     int addOrder(Order order) ;
 
-    Object getOrder (int id);
-
     void updateOrder(Order newOrder, int oldOrderId);
+
+    Order getOrder(int id);
 
     void deleteOrderByTransactionId(int transactionId);
 
-    List<Order> searchOrderById(String id, boolean searchAll);
+    List<Order> searchOrderById(String id,boolean searchAll);
 
-    int getTotalCount();
+    int getTotalCountOfOrder() ;
+
+
 }
