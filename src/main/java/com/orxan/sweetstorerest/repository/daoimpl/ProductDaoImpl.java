@@ -6,8 +6,13 @@ import com.orxan.sweetstorerest.repository.ProductDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,10 +35,21 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void addProduct(Product product) {
+    public Product addProduct(Product product) {
         String sql = "INSERT INTO PRODUCTS (Name,Quantity,Price,Update_Date,updated_by,Is_Active) VALUES (?,?,?,?,?,?)";
-        jdbcTemplate.update(sql,product.getName(),product.getPrice(),product.getUpdateDate()==null ? product.getUpdateDate():LocalDateTime.now(),
-                1,product.isActive() ? 1:0);
+        KeyHolder holder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, product.getName());
+            ps.setInt(2, product.getQuantity());
+            ps.setFloat(3, product.getPrice());
+            ps.setTimestamp(4, product.getUpdateDate()==null ? Timestamp.valueOf(product.getUpdateDate()):Timestamp.valueOf(LocalDateTime.now()));
+            ps.setInt(5, 1);
+            ps.setBoolean(6,product.isActive());
+            return ps;
+        }, holder);
+        return (Product) jdbcTemplate.queryForObject("SELECT * FROM PRODUCTS WHERE id=?",new ProductMapper(),holder.getKey().intValue());
     }
 
     @Override
@@ -53,9 +69,10 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void updateProduct(Product product, int oldProductId) {
+    public Product updateProduct(Product product, int oldProductId) {
         String sql = "UPDATE PRODUCTS set name=?,price=?,quantity=?,update_date=? where id=?";
         jdbcTemplate.update(sql,product.getName(),product.getPrice(),product.getQuantity(),LocalDateTime.now(),oldProductId);
+        return (Product) jdbcTemplate.queryForObject("SELECT * FROM PRODUCTS WHERE id=?",new ProductMapper(),product.getId());
     }
 
     @Override

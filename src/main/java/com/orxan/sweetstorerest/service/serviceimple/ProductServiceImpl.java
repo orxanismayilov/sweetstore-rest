@@ -3,9 +3,11 @@ package com.orxan.sweetstorerest.service.serviceimple;
 import com.orxan.sweetstorerest.model.Product;
 import com.orxan.sweetstorerest.repository.daoimpl.ProductDaoImpl;
 import com.orxan.sweetstorerest.service.ProductService;
+import com.orxan.sweetstorerest.util.GetValidationList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -24,15 +26,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Map addProduct(Product product) {
-        productDao.addProduct(product);
-        return null;
+    public Product addProduct(Product product) {
+        product.setUpdateDate(LocalDateTime.now());
+        return productDao.addProduct(product);
     }
 
     @Override
-    public Map updateProduct(Product product, int oldProductId) {
-        productDao.updateProduct(product,oldProductId);
-        return null;
+    public Product updateProduct(Product product, int oldProductId) {
+        product.setUpdateDate(LocalDateTime.now());
+        List<String> errors= GetValidationList.copyValuesToList(isProductValid(product));
+        if (errors.isEmpty()) {
+            return productDao.updateProduct(product, oldProductId);
+        }else {
+            throw new IllegalArgumentException();
+        }
     }
 
     @Override
@@ -48,7 +55,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(int id) {
-        return productDao.getProductById(id);
+        Product product=productDao.getProductById(id);
+       return product;
     }
 
     @Override

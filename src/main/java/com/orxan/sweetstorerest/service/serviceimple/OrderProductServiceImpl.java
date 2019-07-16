@@ -63,7 +63,7 @@ public class OrderProductServiceImpl implements OrderProductService {
         totalPriceMap.put(false,new ArrayList<>());
         quantityMap.put(false,new ArrayList<>());
         discountMap.put(false,new ArrayList<>());
-        Product product=productService.getProductById(orderProduct.getProductId());
+        Product product= productService.getProductById(orderProduct.getProductId());;
 
         if (orderProduct!=null) {
             List quantityList = quantityMap.get(false);

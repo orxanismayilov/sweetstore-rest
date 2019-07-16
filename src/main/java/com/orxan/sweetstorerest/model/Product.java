@@ -1,5 +1,7 @@
 package com.orxan.sweetstorerest.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 
 public class Product {
@@ -7,6 +9,7 @@ public class Product {
     private int id;
     private String name;
     private int quantity;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime updateDate;
     private float price;
     private boolean isActive;

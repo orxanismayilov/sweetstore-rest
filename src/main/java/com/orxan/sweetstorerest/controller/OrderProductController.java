@@ -14,15 +14,9 @@ import java.util.Map;
 public class OrderProductController {
 
     @Autowired
-    private final OrderProductService orderProductService;
+    private  OrderProductService orderProductService;
     @Autowired
-    private final OrderProductAssembler assembler;
-
-    public OrderProductController(OrderProductService orderProductService, OrderProductAssembler assembler) {
-        this.orderProductService = orderProductService;
-        this.assembler = assembler;
-    }
-
+    private  OrderProductAssembler assembler;
 
     @GetMapping("/orderproducts")
     public List<OrderProduct> getOrderProducts(@PathVariable int orderId) {

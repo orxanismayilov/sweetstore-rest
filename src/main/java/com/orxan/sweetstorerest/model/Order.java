@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.orxan.sweetstorerest.enums.OrderStatus;
 import com.orxan.sweetstorerest.enums.OrderType;
 import org.springframework.hateoas.ResourceSupport;
@@ -15,6 +16,7 @@ public class Order extends ResourceSupport {
     private int transactionID;
     private BigDecimal totalPrice;
     private BigDecimal totalDiscount;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime date;
     private OrderStatus orderStatus;
     private boolean isActive;

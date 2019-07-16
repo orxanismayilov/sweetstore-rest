@@ -9,9 +9,9 @@ public interface ProductService {
 
     List<Product> getProductList(int pageIndex, int rowsPerPage);
 
-    Map addProduct(Product product);
+    Product addProduct(Product product);
 
-    Map updateProduct(Product product, int oldProductId);
+    Product updateProduct(Product product, int oldProductId);
 
     Map<String, Map<Boolean, List<String>>> isProductValid(Product product);
 

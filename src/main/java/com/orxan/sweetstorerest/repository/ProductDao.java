@@ -11,7 +11,7 @@ public interface ProductDao {
 
     List<Product> getProductListForComboBox();
 
-    void addProduct(Product product);
+    Product addProduct(Product product);
 
     void deleteProductById(int id);
 
@@ -19,7 +19,7 @@ public interface ProductDao {
 
     void updateProductIncreaseQuantity(Product newProduct, int id);
 
-    void updateProduct(Product product, int oldProductId);
+    Product updateProduct(Product product, int oldProductId);
 
     Product getProductById(int id);
 

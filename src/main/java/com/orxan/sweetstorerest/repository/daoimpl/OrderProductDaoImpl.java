@@ -1,9 +1,10 @@
 package com.orxan.sweetstorerest.repository.daoimpl;
-
 import com.orxan.sweetstorerest.mappers.OrderProductMapper;
 import com.orxan.sweetstorerest.model.OrderProduct;
 import com.orxan.sweetstorerest.repository.OrderProductDao;
 import com.orxan.sweetstorerest.util.DBConnection;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,6 +17,8 @@ import java.util.List;
 
 @Repository
 public class OrderProductDaoImpl implements OrderProductDao {
+
+    private static Logger logger= LogManager.getLogger(OrderProductDaoImpl.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -65,6 +68,7 @@ public class OrderProductDaoImpl implements OrderProductDao {
        try {
            return (OrderProduct) jdbcTemplate.queryForObject(sql,new OrderProductMapper(),id);
        } catch (EmptyResultDataAccessException e) {
+           logger.error(e.getMessage());
            return null;
        }
     }
