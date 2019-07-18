@@ -13,7 +13,7 @@ public interface ProductDao {
 
     Product addProduct(Product product);
 
-    void deleteProductById(int id);
+    boolean deleteProductById(int id);
 
     Product isProductExist(String name);
 

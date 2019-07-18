@@ -3,7 +3,6 @@ package com.orxan.sweetstorerest.service;
 import com.orxan.sweetstorerest.model.Product;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ProductService {
 
@@ -13,7 +12,7 @@ public interface ProductService {
 
     Product updateProduct(Product product, int oldProductId);
 
-    Map<String, Map<Boolean, List<String>>> isProductValid(Product product);
+    List<String> isProductValid(Product product);
 
     boolean deleteProductByID(int id);
 

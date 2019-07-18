@@ -53,9 +53,15 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void deleteProductById(int id) {
+    public boolean deleteProductById(int id) {
         String sql = "UPDATE PRODUCTS set Is_Active =0,update_date =? where Id = ? ";
-        jdbcTemplate.update(sql,LocalDateTime.now(),id);
+        int count=jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM ORDER_DETAILS where is_active=1 AND id=?", Integer.class,id);
+        if (count>0) {
+            jdbcTemplate.update(sql,LocalDateTime.now(),id);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -88,6 +94,6 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public int getTotalCountOfProduct() {
         return jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM ORDER_DETAILS where is_active=1", Integer.class);
+                "SELECT COUNT(*) FROM PRODUCTS where is_active=1", Integer.class);
     }
 }

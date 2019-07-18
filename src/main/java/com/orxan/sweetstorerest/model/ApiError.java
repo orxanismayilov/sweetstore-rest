@@ -1,17 +1,46 @@
 package com.orxan.sweetstorerest.model;
 
-abstract class ApiError {
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.http.HttpStatus;
 
-}
+import java.time.LocalDateTime;
 
-class ApiValidationError extends ApiError {
-    private String object;
-    private String field;
-    private Object rejectedValue;
+public class ApiError {
+    private HttpStatus status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private LocalDateTime timestamp;
     private String message;
 
-    ApiValidationError(String object, String message) {
-        this.object = object;
+    public ApiError() {
+    }
+
+    public ApiError(HttpStatus status, LocalDateTime timestamp, String message) {
+        this.status = status;
+        this.timestamp = timestamp;
         this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(HttpStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 }

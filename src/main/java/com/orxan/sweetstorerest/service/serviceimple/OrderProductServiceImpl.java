@@ -14,17 +14,17 @@ import java.util.*;
 @Service
 public class OrderProductServiceImpl implements OrderProductService {
 
-    private String ERROR_PROPERTIES="C:\\Users\\Orxan\\Desktop\\projects\\sweetstore-rest\\src\\main\\resources\\properties\\errors.properties";
+    private String ERROR_PROPERTIES="properties/errors.properties";
 
-    private final OrderProductDaoImpl orderProductDao;
+    @Autowired
+    private  OrderProductDaoImpl orderProductDao;
+    @Autowired
     private ProductService productService;
     private Map<String,Map<Boolean,List<String>>> validation;
     private Properties properties;
 
     @Autowired
-    public OrderProductServiceImpl(OrderProductDaoImpl orderProductDao,ProductService productService) {
-        this.orderProductDao = orderProductDao;
-        this.productService=productService;
+    public OrderProductServiceImpl() {
         this.properties= LoadPropertyUtil.loadPropertiesFile(ERROR_PROPERTIES);
     }
 

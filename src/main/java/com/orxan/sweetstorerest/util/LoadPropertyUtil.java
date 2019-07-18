@@ -1,21 +1,25 @@
 package com.orxan.sweetstorerest.util;
 
 
-import java.io.FileInputStream;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 public class LoadPropertyUtil {
 
     public static Properties loadPropertiesFile(String url) {
-        Properties properties = new Properties();
+        Resource resource = new ClassPathResource(url);
+        Properties props;
         try {
-            InputStream input =new FileInputStream(url);
-            properties.load(input);
+            props = PropertiesLoaderUtils.loadProperties(resource);
+            return props;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return properties;
+
     }
 }

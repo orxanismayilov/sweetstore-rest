@@ -6,6 +6,7 @@ import com.orxan.sweetstorerest.model.ResponseObject;
 import com.orxan.sweetstorerest.service.serviceimple.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -59,8 +60,11 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/{id}")
-    public void deleteProduct(@PathVariable int id) {
-        productService.deleteProductByID(id);
+    public ResponseEntity deleteProduct(@PathVariable int id) {
+        if(productService.deleteProductByID(id)) {
+            return new ResponseEntity("Product deleted successfully.", HttpStatus.NO_CONTENT);
+        }
+        throw new ResourceNotFoundException("Product not found. ID="+id);
     }
 
     @PutMapping("/products/{id}")

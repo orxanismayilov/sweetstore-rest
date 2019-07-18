@@ -12,7 +12,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan("com.orxan.sweetstorerest")
 public class SpringJdbcConfig {
-    private static String DB_PROPERTY_URL ="C:\\Users\\Orxan\\Desktop\\projects\\sweetstore-rest\\src\\main\\resources\\properties\\db.properties";
+    private static String DB_PROPERTY_URL ="properties/db.properties";
     private static Properties dbProperties;
 
     @Bean
