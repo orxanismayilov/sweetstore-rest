@@ -32,6 +32,16 @@ public class ProductExceptionController extends ResponseEntityExceptionHandler {
         return buildResponseEntity(responseObject);
     }
 
+    @ExceptionHandler(value = InvalidOrderProductException.class)
+    public ResponseEntity<Object> handleInvalidOrderProductException(InvalidOrderProductException ex) {
+        ResponseObject responseObject=new ResponseObject();
+        responseObject.setStatus(HttpStatus.BAD_REQUEST);
+        responseObject.setTimestamp(LocalDateTime.now());
+        responseObject.setMessage("Invalid OrderProduct.");
+        responseObject.setData(ex.getParam());
+        return buildResponseEntity(responseObject);
+    }
+
     private ResponseEntity<Object> buildResponseEntity(ResponseObject responseObject) {
         return new ResponseEntity<>(responseObject, responseObject.getStatus());
     }

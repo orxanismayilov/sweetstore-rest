@@ -53,21 +53,19 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public boolean deleteProductById(int id) {
+    public void deleteProductById(int id) {
         String sql = "UPDATE PRODUCTS set Is_Active =0,update_date =? where Id = ? ";
-        int count=jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM ORDER_DETAILS where is_active=1 AND id=?", Integer.class,id);
-        if (count>0) {
-            jdbcTemplate.update(sql,LocalDateTime.now(),id);
-            return true;
-        }
-        return false;
+        jdbcTemplate.update(sql,LocalDateTime.now(),id);
     }
 
     @Override
-    public Product isProductExist(String name) {
-        String s = "SELECT * from PRODUCTS  where Name = ? ";
-        return (Product) jdbcTemplate.queryForObject(s,new ProductMapper(),name);
+    public boolean isProductExist(int id) {
+        String s = "SELECT COUNT(*) from PRODUCTS  where is_active = 1 AND id=? ";
+       int count=jdbcTemplate.queryForObject(s,Integer.class,id);
+       if (count>0) {
+           return true;
+       }
+       return false;
     }
 
     @Override
@@ -76,9 +74,9 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product updateProduct(Product product, int oldProductId) {
-        String sql = "UPDATE PRODUCTS set name=?,price=?,quantity=?,update_date=? where id=?";
+        String sql = "UPDATE PRODUCTS set name=?,price=?,quantity=quantity+?,update_date=? where id=?";
         jdbcTemplate.update(sql,product.getName(),product.getPrice(),product.getQuantity(),LocalDateTime.now(),oldProductId);
-        return (Product) jdbcTemplate.queryForObject("SELECT * FROM PRODUCTS WHERE id=?",new ProductMapper(),product.getId());
+        return (Product) jdbcTemplate.queryForObject("SELECT * FROM PRODUCTS WHERE id=?",new ProductMapper(),oldProductId);
     }
 
     @Override

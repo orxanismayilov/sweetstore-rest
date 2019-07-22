@@ -13,9 +13,9 @@ public interface ProductDao {
 
     Product addProduct(Product product);
 
-    boolean deleteProductById(int id);
+    void deleteProductById(int id);
 
-    Product isProductExist(String name);
+    boolean isProductExist(int id);
 
     void updateProductIncreaseQuantity(Product newProduct, int id);
 

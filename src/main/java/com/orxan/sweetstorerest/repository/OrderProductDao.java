@@ -8,11 +8,13 @@ public interface OrderProductDao {
 
     List<OrderProduct> getListByOrderId(int orderId);
 
-    void saveOrderProduct(OrderProduct orderProduct);
+    OrderProduct saveOrderProduct(OrderProduct orderProduct);
 
     OrderProduct getOrderProduct(int id);
 
     void removeOrderProductById(int id);
+
+    boolean isOrderProductExists(int id);
 
     void updateOrderProduct(OrderProduct newOrderProduct, int id);
 }

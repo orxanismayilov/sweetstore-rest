@@ -1,6 +1,5 @@
 package com.orxan.sweetstorerest.controller;
 
-import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.Product;
 import com.orxan.sweetstorerest.model.ResponseObject;
 import com.orxan.sweetstorerest.service.serviceimple.ProductServiceImpl;
@@ -13,62 +12,52 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@RequestMapping("/products")
 public class ProductController {
 
     @Autowired
     private ProductServiceImpl productService;
 
-    @GetMapping("/products")
+    @GetMapping
     public ResponseObject getAllProducts(@RequestParam int startPage,
                                         @RequestParam int rowsPerPage) {
         List<Product> productList=productService.getProductList(startPage,rowsPerPage);
+        return createResponseObject("Products",productList,HttpStatus.OK);
+    }
+
+
+    @GetMapping("/{id}")
+    public ResponseObject getProduct(@PathVariable int id) {
+       Product product=productService.getProductById(id);
+       return createResponseObject("Product id="+id,product,HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseObject addProduct(@RequestBody Product product) {
+       Product productAdded=productService.addProduct(product);
+       return createResponseObject("Product created.",productAdded,HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable int id) {
+        productService.deleteProductByID(id);
+        String message="Product deleted successfully.Id="+id;
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(message);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseObject updateProduct(@RequestBody Product product,@PathVariable int id) {
+        Product newProduct=productService.updateProduct(product,id);
+        return createResponseObject("Product updated.",newProduct,HttpStatus.CREATED);
+    }
+
+    private ResponseObject createResponseObject(String msg, Object data, HttpStatus status) {
         ResponseObject responseObject=new ResponseObject();
-        if (!productList.isEmpty()) {
-            responseObject.setStatus(HttpStatus.OK);
-            responseObject.setTimestamp(LocalDateTime.now());
-            responseObject.setMessage("Products");
-            responseObject.setData(productList);
-        } else {
-            throw new ResourceNotFoundException("No products found!");
-        }
+        responseObject.setStatus(status);
+        responseObject.setTimestamp(LocalDateTime.now());
+        responseObject.setMessage(msg);
+        responseObject.setData(data);
         return responseObject;
     }
 
-
-    @GetMapping("/products/{id}")
-    public ResponseObject getProduct(@PathVariable int id) {
-       ResponseObject responseObject=new ResponseObject();
-       Product product=productService.getProductById(id);
-       if (product!=null) {
-           responseObject.setStatus(HttpStatus.OK);
-           responseObject.setMessage("Product id="+id);
-           responseObject.setData(product);
-           responseObject.setTimestamp(LocalDateTime.now());
-       } else throw new ResourceNotFoundException("Product Not found id="+id);
-       return responseObject;
-    }
-
-    @PostMapping("/products")
-    public ResponseObject addProduct(@RequestBody Product product) {
-       Product productAdded=productService.addProduct(product);
-       ResponseObject responseObject=new ResponseObject();
-       responseObject.setStatus(HttpStatus.CREATED);
-       responseObject.setTimestamp(LocalDateTime.now());
-       responseObject.setMessage("Product created.");
-       responseObject.setData(productAdded);
-       return responseObject;
-    }
-
-    @DeleteMapping("/products/{id}")
-    public ResponseEntity deleteProduct(@PathVariable int id) {
-        if(productService.deleteProductByID(id)) {
-            return new ResponseEntity("Product deleted successfully.", HttpStatus.NO_CONTENT);
-        }
-        throw new ResourceNotFoundException("Product not found. ID="+id);
-    }
-
-    @PutMapping("/products/{id}")
-    public void updateProduct(@RequestBody Product product,@PathVariable int id) {
-        productService.updateProduct(product,id);
-    }
 }

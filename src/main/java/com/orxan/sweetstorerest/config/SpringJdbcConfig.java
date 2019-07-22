@@ -1,28 +1,29 @@
 package com.orxan.sweetstorerest.config;
 
-import com.orxan.sweetstorerest.util.LoadPropertyUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
-import java.util.Properties;
 
 @Configuration
 @ComponentScan("com.orxan.sweetstorerest")
+@PropertySource("classpath:properties/db.properties")
 public class SpringJdbcConfig {
-    private static String DB_PROPERTY_URL ="properties/db.properties";
-    private static Properties dbProperties;
+    @Autowired
+    private Environment environment;
 
     @Bean
     public DataSource mysqlDataSource() {
-        dbProperties= LoadPropertyUtil.loadPropertiesFile(DB_PROPERTY_URL);
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(dbProperties.getProperty("localedb.driver"));
-        dataSource.setUrl(dbProperties.getProperty("localedb.url"));
-        dataSource.setUsername(dbProperties.getProperty("localedb.user"));
-        dataSource.setPassword(dbProperties.getProperty("localedb.password"));
+        dataSource.setDriverClassName(environment.getProperty("localedb.driver"));
+        dataSource.setUrl(environment.getProperty("localedb.url"));
+        dataSource.setUsername(environment.getProperty("localedb.user"));
+        dataSource.setPassword(environment.getProperty("localedb.password"));
 
         return dataSource;
     }
