@@ -21,4 +21,6 @@ public interface ProductService {
     List<Product> getProductListForComboBox();
 
     int getTotalCountOfProduct();
+
+     Product chechkProductNameIsExist(String name);
 }

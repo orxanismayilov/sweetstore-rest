@@ -91,4 +91,15 @@ public class ProductDaoImpl implements ProductDao {
         return jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM PRODUCTS where is_active=1", Integer.class);
     }
+
+    @Override
+    public Product chechkProductNameIsExist(String name) {
+        String sql="SELECT * FROM PRODUCTS WHERE name=? AND is_Active=1";
+        try {
+            Product product=(Product) jdbcTemplate.queryForObject(sql,new ProductMapper(),name);
+            return product;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 }

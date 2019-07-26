@@ -24,4 +24,6 @@ public interface ProductDao {
     Product getProductById(int id);
 
     int getTotalCountOfProduct();
+
+    Product chechkProductNameIsExist(String name);
 }

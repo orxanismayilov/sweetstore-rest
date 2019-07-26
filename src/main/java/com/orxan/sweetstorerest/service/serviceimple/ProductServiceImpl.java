@@ -132,6 +132,11 @@ public class ProductServiceImpl implements ProductService {
         return productDao.getTotalCountOfProduct();
     }
 
+    @Override
+    public Product chechkProductNameIsExist(String name) {
+       return productDao.chechkProductNameIsExist(name);
+    }
+
     private String renameProduct(String productName) {
         String finalName = "";
         if (productName != null) {
