@@ -17,13 +17,11 @@ public interface ProductDao {
 
     boolean isProductExist(int id);
 
-    void updateProductIncreaseQuantity(Product newProduct, int id);
-
     Product updateProduct(Product product, int oldProductId);
 
     Product getProductById(int id);
 
     int getTotalCountOfProduct();
 
-    Product chechkProductNameIsExist(String name);
+    Product checkProductNameIsExist(String name);
 }

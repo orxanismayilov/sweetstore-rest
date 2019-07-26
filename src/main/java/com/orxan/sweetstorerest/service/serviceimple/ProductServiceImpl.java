@@ -48,10 +48,16 @@ public class ProductServiceImpl implements ProductService {
     public Product addProduct(Product product) {
         List<String> errorList= isProductValid(product);
         if (errorList.isEmpty()) {
-            return productDao.addProduct(product);
-        }else {
+            Product checkProduct=productDao.checkProductNameIsExist(product.getName());
+            if (checkProduct==null) {
+                return productDao.addProduct(product);
+            } else {
+                checkProduct.setQuantity(product.getQuantity()+checkProduct.getQuantity());
+                productDao.updateProduct(checkProduct,checkProduct.getId());
+            }
+        } else
             throw new InvalidProductException(errorList);
-        }
+        return null;
     }
 
     @Override
@@ -133,8 +139,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product chechkProductNameIsExist(String name) {
-       return productDao.chechkProductNameIsExist(name);
+    public Product checkProductNameIsExist(String name) {
+       return productDao.checkProductNameIsExist(name);
     }
 
     private String renameProduct(String productName) {

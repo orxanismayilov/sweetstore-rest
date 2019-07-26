@@ -66,10 +66,6 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void updateProductIncreaseQuantity(Product newProduct, int id) {
-    }
-
-    @Override
     public Product updateProduct(Product product, int oldProductId) {
         String sql = "UPDATE PRODUCTS set name=?,price=?,quantity=quantity+?,update_date=current_date() where id=?";
         jdbcTemplate.update(sql,product.getName(),product.getPrice(),product.getQuantity(),oldProductId);
@@ -93,7 +89,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Product chechkProductNameIsExist(String name) {
+    public Product checkProductNameIsExist(String name) {
         String sql="SELECT * FROM PRODUCTS WHERE name=? AND is_Active=1";
         try {
             Product product=(Product) jdbcTemplate.queryForObject(sql,new ProductMapper(),name);

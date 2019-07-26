@@ -22,5 +22,5 @@ public interface ProductService {
 
     int getTotalCountOfProduct();
 
-     Product chechkProductNameIsExist(String name);
+     Product checkProductNameIsExist(String name);
 }

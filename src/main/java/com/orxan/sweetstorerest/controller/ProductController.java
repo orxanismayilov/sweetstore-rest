@@ -25,6 +25,12 @@ public class ProductController {
         return createResponseObject(responseObject,HttpStatus.OK);
     }
 
+    @GetMapping("/combo-box")
+    public ResponseEntity<ResponseObject> getProductListForComboBox() {
+        List<Product> list=productService.getProductListForComboBox();
+        ResponseObject<List<Product>> responseObject=new ResponseObject<>("success",list);
+        return createResponseObject(responseObject,HttpStatus.OK);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getProduct(@PathVariable int id) {
