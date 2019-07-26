@@ -40,9 +40,10 @@ public class ProductController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity getTotalCount(){
+    public ResponseEntity<ResponseObject> getTotalCount(){
        int count= productService.getTotalCountOfProduct();
-       return new ResponseEntity(count,HttpStatus.OK);
+       ResponseObject<Integer> responseObject=new ResponseObject<>("success",count);
+       return createResponseObject(responseObject,HttpStatus.OK);
     }
 
     @PostMapping
