@@ -22,7 +22,7 @@ public class OrderMapper implements RowMapper {
         order.setTotalPrice(resultSet.getBigDecimal("price_total"));
         order.setDate(resultSet.getTimestamp("insert_date").toString());
         order.setOrderStatus(OrderStatus.valueOf(resultSet.getString("order_status")));
-        order.setActive(true);
+        order.setActive(resultSet.getBoolean("is_active"));
         return order;
     }
 }

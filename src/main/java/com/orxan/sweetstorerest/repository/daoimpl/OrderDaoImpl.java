@@ -41,7 +41,7 @@ public class OrderDaoImpl implements OrderDao {
             ps.setString(5, order.getOrderStatus().toString());
             ps.setFloat(6, order.getTotalPrice().floatValue());
             ps.setInt(8, 2);
-            ps.setBoolean(9, order.isActive());
+            ps.setBoolean(9, true);
             return ps;
         }, holder);
 
@@ -74,7 +74,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public List<Order> searchOrderById(String id, boolean searchAll) {
         String sql = "SELECT * FROM ORDER_DETAILS WHERE id LIKE ? and is_active=?";
-       return jdbcTemplate.query(sql,new OrderMapper(),id == null ? "%%" : "%" + id + "%",1);
+       return jdbcTemplate.query(sql,new OrderMapper(),id == null ? "%%" : "%" + id + "%",searchAll ? 0:1);
     }
 
 

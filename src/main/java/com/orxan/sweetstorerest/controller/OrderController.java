@@ -31,6 +31,23 @@ public class OrderController {
         return createResponseObject(responseObject,HttpStatus.OK);
     }
 
+
+    @GetMapping("/q")
+    public ResponseEntity<ResponseObject> findOrderById(@RequestParam String id,
+                                                        @RequestParam(value="getAll",defaultValue = "false")
+                                                                boolean getAll) {
+        List<Order> list=orderService.searchOrderById(id,getAll);
+        ResponseObject<List<Order>> responseObject=new ResponseObject<>("success",list);
+        return createResponseObject(responseObject,HttpStatus.OK);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<ResponseObject> getTotalCountofOrder() {
+        int count=orderService.getTotalCountOfOrder();
+        ResponseObject responseObject=new ResponseObject("success",count);
+        return createResponseObject(responseObject,HttpStatus.OK);
+    }
+
     @PostMapping
     public  ResponseEntity<ResponseObject> addOrder(@RequestBody Order order) {
        Order order1= orderService.addNewOrderToList(order);
