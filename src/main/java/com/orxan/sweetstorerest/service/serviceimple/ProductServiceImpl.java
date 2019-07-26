@@ -8,7 +8,6 @@ import com.orxan.sweetstorerest.service.ProductService;
 import com.orxan.sweetstorerest.util.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,24 +15,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@PropertySource("classpath:properties/errors.properties")
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductDaoImpl productDao;
     @Value("${error.product.nameSize}")
     private String nameSize;
-    @Value("error.product.nullName")
+    @Value("${error.product.nullName}")
     private String nullName;
-    @Value("error.product.negativeQuantity")
+    @Value("${error.product.negativeQuantity}")
     private String negativeQuantity;
-    @Value("error.product.maxQuantity")
+    @Value("${error.product.maxQuantity}")
     private String maxQuantity;
-    @Value("error.product.invalidNumber")
+    @Value("${error.product.invalidNumber}")
     private String invalidNumber;
-    @Value("error.product.negativePrice")
+    @Value("${error.product.negativePrice}")
     private String negativePrice;
-    @Value("error.product.maxPrice")
+    @Value("$}error.product.maxPrice}")
     private String maxPrice;
 
     @Override
@@ -44,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
         List<Product> productList=productDao.getProductList(fromIndex,toIndex);
         if (!productList.isEmpty()) {
             return productList;
-        } else throw new ResourceNotFoundException("No products found");
+        } else throw new ResourceNotFoundException("No products found.");
     }
 
     @Override

@@ -20,5 +20,7 @@ public interface OrderDao {
 
     int getTotalCountOfOrder() ;
 
+    boolean isOrderExists(int id);
+
 
 }

@@ -1,14 +1,12 @@
 package com.orxan.sweetstorerest.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.orxan.sweetstorerest.enums.OrderStatus;
 import com.orxan.sweetstorerest.enums.OrderType;
-import org.springframework.hateoas.ResourceSupport;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Order extends ResourceSupport {
+public class Order {
     private String customerName;
     private String customerAddress;
     private String description;
@@ -16,7 +14,6 @@ public class Order extends ResourceSupport {
     private int transactionID;
     private BigDecimal totalPrice;
     private BigDecimal totalDiscount;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime date;
     private OrderStatus orderStatus;
     private boolean isActive;

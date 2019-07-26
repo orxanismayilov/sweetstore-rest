@@ -8,7 +8,7 @@ public interface OrderService {
 
     List<Order> getOrderList(int pageIndex, int rowsPerPage);
 
-    int addNewOrderToList(Order order);
+    Order addNewOrderToList(Order order);
 
     List<Order> searchOrderById(String id, boolean searchAll);
 
@@ -16,7 +16,7 @@ public interface OrderService {
 
     boolean deleteOrderByTransactionId(int transactionId);
 
-    void updateOrderById(Order newOrder, int orderId);
+    Order updateOrderById(Order newOrder, int orderId);
 
     int getTotalCountOfOrder();
 }

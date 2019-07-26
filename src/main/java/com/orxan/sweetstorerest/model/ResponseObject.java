@@ -1,41 +1,15 @@
 package com.orxan.sweetstorerest.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.http.HttpStatus;
-
-import java.time.LocalDateTime;
-
-public class ResponseObject {
-    private HttpStatus status;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    private LocalDateTime timestamp;
+public class ResponseObject<T> {
     private String message;
-    private Object data;
+    private T data;
 
     public ResponseObject() {
     }
 
-    public ResponseObject(HttpStatus status, LocalDateTime timestamp, String message, String debugMessage, Object data) {
-        this.status = status;
-        this.timestamp = timestamp;
+    public ResponseObject(String message, T data) {
         this.message = message;
         this.data = data;
-    }
-
-    public HttpStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(HttpStatus status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
     }
 
     public String getMessage() {
@@ -50,7 +24,7 @@ public class ResponseObject {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 }

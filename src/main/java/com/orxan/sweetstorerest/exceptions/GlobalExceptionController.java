@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.time.LocalDateTime;
 
 @ControllerAdvice
-public class ProductExceptionController extends ResponseEntityExceptionHandler {
+public class GlobalExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = ResourceNotFoundException.class)
     public ResponseEntity<Object> exception(RuntimeException ex) {
@@ -25,25 +25,21 @@ public class ProductExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = InvalidProductException.class)
     public ResponseEntity<Object> handleInvalidProductException(InvalidProductException ex) {
         ResponseObject responseObject=new ResponseObject();
-        responseObject.setStatus(HttpStatus.BAD_REQUEST);
-        responseObject.setTimestamp(LocalDateTime.now());
         responseObject.setMessage("Invalid product.");
         responseObject.setData(ex.getParam());
-        return buildResponseEntity(responseObject);
+        return buildResponseEntity(responseObject,HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = InvalidOrderProductException.class)
     public ResponseEntity<Object> handleInvalidOrderProductException(InvalidOrderProductException ex) {
         ResponseObject responseObject=new ResponseObject();
-        responseObject.setStatus(HttpStatus.BAD_REQUEST);
-        responseObject.setTimestamp(LocalDateTime.now());
         responseObject.setMessage("Invalid OrderProduct.");
         responseObject.setData(ex.getParam());
-        return buildResponseEntity(responseObject);
+        return buildResponseEntity(responseObject,HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<Object> buildResponseEntity(ResponseObject responseObject) {
-        return new ResponseEntity<>(responseObject, responseObject.getStatus());
+    private ResponseEntity<Object> buildResponseEntity(ResponseObject responseObject,HttpStatus status) {
+        return new ResponseEntity<>(responseObject, status);
     }
 
 

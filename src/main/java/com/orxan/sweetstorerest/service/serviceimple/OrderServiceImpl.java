@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
+import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.Order;
 import com.orxan.sweetstorerest.repository.daoimpl.OrderDaoImpl;
 import com.orxan.sweetstorerest.service.OrderService;
@@ -19,17 +20,25 @@ public class OrderServiceImpl implements OrderService {
         int totalCount=orderDao.getTotalCountOfOrder();
         int fromIndex=pageIndex*rowsPerPage;
         int toIndex=Math.min(fromIndex+rowsPerPage,totalCount);
-        return orderDao.getOrderList(fromIndex,toIndex);
+        List<Order> orderList=orderDao.getOrderList(fromIndex,toIndex);
+        if (orderList.isEmpty()) throw new ResourceNotFoundException("No products found.");
+        return orderList;
     }
 
     @Override
-    public int addNewOrderToList(Order order) {
-        return orderDao.addOrder(order);
+    public Order addNewOrderToList(Order order) {
+       int id= orderDao.addOrder(order);
+       if (orderDao.isOrderExists(id)) {
+           return orderDao.getOrder(id);
+       }
+       return null;
     }
 
     @Override
     public Order getOrder(int id) {
-        return orderDao.getOrder(id);
+        Order order=orderDao.getOrder(id);
+        if (order==null) throw new ResourceNotFoundException("Order not found. Id="+id);
+        return order;
     }
 
     @Override
@@ -39,13 +48,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean deleteOrderByTransactionId(int transactionId) {
-        orderDao.deleteOrderByTransactionId(transactionId);
-        return true;
+        if (orderDao.isOrderExists(transactionId)) {
+            orderDao.deleteOrderByTransactionId(transactionId);
+            return true;
+        } else throw new ResourceNotFoundException("Order not found.Id="+transactionId);
     }
 
     @Override
-    public void updateOrderById(Order newOrder, int orderId) {
+    public Order updateOrderById(Order newOrder, int orderId) {
         orderDao.updateOrder(newOrder,orderId);
+        return orderDao.getOrder(orderId);
     }
 
     @Override

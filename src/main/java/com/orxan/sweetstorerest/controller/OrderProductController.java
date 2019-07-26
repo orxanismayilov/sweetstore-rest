@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -19,41 +18,41 @@ public class OrderProductController {
     private  OrderProductService orderProductService;
 
     @GetMapping("/list/{orderId}")
-    public ResponseObject getOrderProducts(@PathVariable int orderId) {
+    public ResponseEntity<ResponseObject> getOrderProducts(@PathVariable int orderId) {
         List<OrderProduct>orderProductList=orderProductService.getOrderProductByOrderId(orderId);
-        return createResponseObject(orderProductList,HttpStatus.OK);
+        ResponseObject<List<OrderProduct>> responseObject=new ResponseObject<>("success",orderProductList);
+        return createResponseObject(responseObject,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseObject getOrderProduct(@PathVariable int id){
-        return createResponseObject(orderProductService.getOrderProduct(id),HttpStatus.OK);
+    public ResponseEntity<ResponseObject> getOrderProduct(@PathVariable int id){
+        OrderProduct orderProduct=orderProductService.getOrderProduct(id);
+        ResponseObject<OrderProduct> responseObject=new ResponseObject<>("success",orderProduct);
+        return createResponseObject(responseObject,HttpStatus.OK);
     }
 
     @PostMapping("/list/{orderId}")
-    public  ResponseObject addOrderProduct(@RequestBody OrderProduct orderProduct, @PathVariable int orderId){
+    public  ResponseEntity<ResponseObject> addOrderProduct(@RequestBody OrderProduct orderProduct, @PathVariable int orderId){
         orderProduct.setOrderId(orderId);
         OrderProduct orderProduct1=orderProductService.saveOrderProduct(orderProduct);
-        return createResponseObject(orderProduct1,HttpStatus.CREATED);
+        ResponseObject<OrderProduct> responseObject=new ResponseObject<>("success",orderProduct1);
+        return createResponseObject(responseObject,HttpStatus.CREATED);
     }
     @PutMapping("/list/{orderId}/{id}")
-    public  ResponseObject updateOrderProduct(@RequestBody OrderProduct orderProduct,@PathVariable int id){
+    public  ResponseEntity<ResponseObject> updateOrderProduct(@RequestBody OrderProduct orderProduct, @PathVariable int id){
         OrderProduct orderProduct1=orderProductService.updateOrderProduct(orderProduct,id);
-        return createResponseObject(orderProduct1,HttpStatus.CREATED);
+        ResponseObject<OrderProduct> responseObject=new ResponseObject<>("success",orderProduct1);
+        return createResponseObject(responseObject,HttpStatus.CREATED);
     }
 
     @DeleteMapping("/list/{orderId}/{id}")
-    public ResponseEntity<String> deleteOrderProduct(@PathVariable int id) {
+    public ResponseEntity deleteOrderProduct(@PathVariable int id) {
         orderProductService.removeOrderProductById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("success");
     }
 
-    private ResponseObject createResponseObject(Object data, HttpStatus status) {
-        ResponseObject responseObject=new ResponseObject();
-        responseObject.setStatus(status);
-        responseObject.setTimestamp(LocalDateTime.now());
-        responseObject.setMessage("success");
-        responseObject.setData(data);
-        return responseObject;
+    private ResponseEntity<ResponseObject> createResponseObject(ResponseObject data, HttpStatus status) {
+        return new ResponseEntity<>(data,status);
     }
 
 }
