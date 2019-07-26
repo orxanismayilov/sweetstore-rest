@@ -39,6 +39,12 @@ public class ProductController {
        return createResponseObject(responseObject,HttpStatus.OK);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity getTotalCount(){
+       int count= productService.getTotalCountOfProduct();
+       return new ResponseEntity(count,HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<ResponseObject> addProduct(@RequestBody Product product) {
        Product productAdded=productService.addProduct(product);
