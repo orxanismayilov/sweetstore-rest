@@ -12,8 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -36,7 +34,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product addProduct(Product product) {
-        String sql = "INSERT INTO PRODUCTS (Name,Quantity,Price,Update_Date,updated_by,Is_Active) VALUES (?,?,?,?,?,?)";
+        String sql = "INSERT INTO PRODUCTS (Name,Quantity,Price,Update_Date,updated_by,Is_Active) VALUES (?,?,?,current_date(),?,?)";
         KeyHolder holder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -44,7 +42,6 @@ public class ProductDaoImpl implements ProductDao {
             ps.setString(1, product.getName());
             ps.setInt(2, product.getQuantity());
             ps.setFloat(3, product.getPrice());
-            ps.setTimestamp(4, product.getUpdateDate()==null ? Timestamp.valueOf(product.getUpdateDate()):Timestamp.valueOf(LocalDateTime.now()));
             ps.setInt(5, 1);
             ps.setBoolean(6,product.isActive());
             return ps;
@@ -54,8 +51,8 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public void deleteProductById(int id) {
-        String sql = "UPDATE PRODUCTS set Is_Active =0,update_date =? where Id = ? ";
-        jdbcTemplate.update(sql,LocalDateTime.now(),id);
+        String sql = "UPDATE PRODUCTS set Is_Active =0,update_date =current_date() where Id = ? ";
+        jdbcTemplate.update(sql,id);
     }
 
     @Override
@@ -74,8 +71,8 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product updateProduct(Product product, int oldProductId) {
-        String sql = "UPDATE PRODUCTS set name=?,price=?,quantity=quantity+?,update_date=? where id=?";
-        jdbcTemplate.update(sql,product.getName(),product.getPrice(),product.getQuantity(),LocalDateTime.now(),oldProductId);
+        String sql = "UPDATE PRODUCTS set name=?,price=?,quantity=quantity+?,update_date=current_date() where id=?";
+        jdbcTemplate.update(sql,product.getName(),product.getPrice(),product.getQuantity(),oldProductId);
         return (Product) jdbcTemplate.queryForObject("SELECT * FROM PRODUCTS WHERE id=?",new ProductMapper(),oldProductId);
     }
 

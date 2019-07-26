@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +46,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product addProduct(Product product) {
-        product.setUpdateDate(LocalDateTime.now());
         List<String> errorList= isProductValid(product);
         if (errorList.isEmpty()) {
             return productDao.addProduct(product);
@@ -58,7 +56,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Product product, int oldProductId) {
-        product.setUpdateDate(LocalDateTime.now());
         if (productDao.isProductExist(oldProductId)) {
             List<String> errorList = isProductValid(product);
             if (errorList.isEmpty()) {

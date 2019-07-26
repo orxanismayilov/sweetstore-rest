@@ -4,7 +4,6 @@ import com.orxan.sweetstorerest.enums.OrderStatus;
 import com.orxan.sweetstorerest.enums.OrderType;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 public class Order {
     private String customerName;
@@ -14,14 +13,14 @@ public class Order {
     private int transactionID;
     private BigDecimal totalPrice;
     private BigDecimal totalDiscount;
-    private LocalDateTime date;
+    private String date;
     private OrderStatus orderStatus;
     private boolean isActive;
 
     public Order() {
     }
 
-    public Order(String customerName, String customerAddress, String description, OrderType orderType, int transactionID, BigDecimal totalPrice, BigDecimal totalDiscount, LocalDateTime date, OrderStatus orderStatus, boolean isActive) {
+    public Order(String customerName, String customerAddress, String description, OrderType orderType, int transactionID, BigDecimal totalPrice, BigDecimal totalDiscount, String date, OrderStatus orderStatus, boolean isActive) {
         this.customerName = customerName;
         this.customerAddress = customerAddress;
         this.description = description;
@@ -90,11 +89,11 @@ public class Order {
         this.totalDiscount = totalDiscount;
     }
 
-    public LocalDateTime getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

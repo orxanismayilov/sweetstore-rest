@@ -12,8 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -32,7 +30,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public int addOrder(Order order) {
         String sql = "INSERT INTO ORDER_DETAILS (customer_name,customer_address,description,order_type,order_status,price_total,insert_date,updated_by,is_active)" +
-                " VALUES (?,?,?,?,?,?,?,?,?)";
+                " VALUES (?,?,?,?,?,?,current_date(),?,?)";
         KeyHolder holder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -42,7 +40,6 @@ public class OrderDaoImpl implements OrderDao {
             ps.setString(4, order.getOrderType().toString());
             ps.setString(5, order.getOrderStatus().toString());
             ps.setFloat(6, order.getTotalPrice().floatValue());
-            ps.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
             ps.setInt(8, 2);
             ps.setBoolean(9, order.isActive());
             return ps;
@@ -64,9 +61,8 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public void updateOrder(Order order, int oldOrderId) {
-        String sql = "UPDATE ORDER_DETAILS set customer_name=?,customer_address=?,description=?,order_type=?,order_status=?,price_total=?,insert_date=?,updated_by=?,is_active=? where id=?";
-        Timestamp ts = Timestamp.valueOf(LocalDateTime.now());
-        jdbcTemplate.update(sql,order.getCustomerName(),order.getCustomerAddress(),order.getDescription(),order.getOrderType().toString(),order.getOrderStatus().toString(),order.getTotalPrice().floatValue(),ts,2,order.isActive()? 1:0,oldOrderId);
+        String sql = "UPDATE ORDER_DETAILS set customer_name=?,customer_address=?,description=?,order_type=?,order_status=?,price_total=?,insert_date=current_date(),updated_by=?,is_active=? where id=?";
+        jdbcTemplate.update(sql,order.getCustomerName(),order.getCustomerAddress(),order.getDescription(),order.getOrderType().toString(),order.getOrderStatus().toString(),order.getTotalPrice().floatValue(),2,order.isActive()? 1:0,oldOrderId);
     }
 
     @Override
