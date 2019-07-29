@@ -22,7 +22,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public List<Order> getOrderList(int fromIndex, int toIndex) {
-        String sql = "SELECT * FROM ORDER_DETAILS WHERE  is_active=1 LIMIT ?,?;";
+        String sql = "SELECT * FROM ORDER_DETAILS WHERE  is_active=1 ORDER BY id DESC LIMIT ?,?;";
         return jdbcTemplate.query(sql, new OrderMapper(),fromIndex,toIndex);
 
     }
@@ -40,8 +40,8 @@ public class OrderDaoImpl implements OrderDao {
             ps.setString(4, order.getOrderType().toString());
             ps.setString(5, order.getOrderStatus().toString());
             ps.setFloat(6, order.getTotalPrice().floatValue());
-            ps.setInt(8, 2);
-            ps.setBoolean(9, true);
+            ps.setInt(7, 2);
+            ps.setBoolean(8, true);
             return ps;
         }, holder);
 
