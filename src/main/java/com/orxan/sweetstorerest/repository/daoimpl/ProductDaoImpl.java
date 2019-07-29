@@ -67,7 +67,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product updateProduct(Product product, int oldProductId) {
-        String sql = "UPDATE PRODUCTS set name=?,price=?,quantity=quantity+?,update_date=current_date() where id=?";
+        String sql = "UPDATE PRODUCTS set name=?,price=?,quantity=?,update_date=current_date() where id=?";
         jdbcTemplate.update(sql,product.getName(),product.getPrice(),product.getQuantity(),oldProductId);
         return (Product) jdbcTemplate.queryForObject("SELECT * FROM PRODUCTS WHERE id=?",new ProductMapper(),oldProductId);
     }

@@ -53,6 +53,7 @@ public class ProductServiceImpl implements ProductService {
                 return productDao.addProduct(product);
             } else {
                 checkProduct.setQuantity(product.getQuantity()+checkProduct.getQuantity());
+                checkProduct.setPrice(product.getPrice());
                 productDao.updateProduct(checkProduct,checkProduct.getId());
             }
         } else
