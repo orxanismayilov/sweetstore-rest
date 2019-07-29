@@ -19,6 +19,7 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<ResponseObject> login(@RequestBody User user) {
         ResponseObject<Boolean> responseObject=new ResponseObject<>("success",false);
+
         if (userService.validateLogin(user)) {
             responseObject.setData(true);
            return new ResponseEntity<>(responseObject, HttpStatus.OK);

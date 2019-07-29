@@ -16,10 +16,6 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void startUserSesion(User user) {
-        String sql = "INSERT into USERS (Name,password,role,is_active) values (?,?,?,?)";
-        PasswordAuthentication passwordAuthentication = new PasswordAuthentication();
-        String password = passwordAuthentication.hash(user.getPassword());
-        jdbcTemplate.update(sql,user.getName(),password,user.getRole().toString(),true);
     }
 
     @Override
