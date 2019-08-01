@@ -8,7 +8,7 @@ public interface OrderProductDao {
 
     List<OrderProduct> getListByOrderId(int orderId);
 
-    OrderProduct saveOrderProduct(OrderProduct orderProduct);
+    int saveOrderProduct(OrderProduct orderProduct);
 
     OrderProduct getOrderProduct(int id);
 

@@ -18,7 +18,7 @@ public interface ProductService {
 
     Product getProductById(int id);
 
-    List<Product> getProductListForComboBox();
+    List<Product> getProductListInStock();
 
     int getTotalCountOfProduct();
 

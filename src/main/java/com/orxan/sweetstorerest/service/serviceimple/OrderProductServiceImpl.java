@@ -33,7 +33,8 @@ public class OrderProductServiceImpl implements OrderProductService {
     public OrderProduct saveOrderProduct(OrderProduct orderProduct) {
         List<String> errorList=validateOrderProduct(orderProduct);
         if (errorList.isEmpty()){
-            return orderProductDao.saveOrderProduct(orderProduct);
+            int i= orderProductDao.saveOrderProduct(orderProduct);
+            return orderProductDao.getOrderProduct(i);
         }
         else throw new InvalidOrderProductException(errorList);
     }

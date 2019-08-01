@@ -25,19 +25,12 @@ public class OrderProductDaoImpl implements OrderProductDao {
 
     @Override
     public List<OrderProduct> getListByOrderId(int orderId) {
-
-        String sql = "select \n" +
-                "op.id,op.order_Id,op.product_id,p.name,op.price,op.quantity,\n" +
-                "op.total_price,op.discount,op.description\n" +
-                "from \n" +
-                "ORDER_PRODUCT AS op \n" +
-                "inner join PRODUCTS AS p  on op.product_id=p.id \n" +
-                "where order_id=? and op.is_active=1";
+        String sql = "select op.id,op.order_Id,op.product_id,p.name,op.price,op.quantity,op.total_price,op.discount,op.description,op.is_active from ORDER_PRODUCT op inner join PRODUCTS p  on op.product_id=p.id where op.order_id=? and op.is_active=1;";
        return jdbcTemplate.query(sql,new OrderProductMapper(),orderId);
     }
 
     @Override
-    public OrderProduct saveOrderProduct(OrderProduct orderProduct) {
+    public int saveOrderProduct(OrderProduct orderProduct) {
         String sql = "INSERT INTO ORDER_PRODUCT (order_Id,product_Id,price,quantity,total_price,discount,description,is_active)" +
                 "VALUES (?,?,?,?,?,?,?,?)";
         KeyHolder holder=new GeneratedKeyHolder();
@@ -50,16 +43,15 @@ public class OrderProductDaoImpl implements OrderProductDao {
             ps.setFloat(5,orderProduct.getTotalPrice().floatValue());
             ps.setFloat(6,orderProduct.getDiscount());
             ps.setString(7,orderProduct.getDescription());
-            ps.setBoolean(8,orderProduct.isActive());
+            ps.setBoolean(8,true);
             return ps;
         },holder);
-        return (OrderProduct) jdbcTemplate.queryForObject("select op.id,op.order_Id,op.product_id,p.name,op.price,op.quantity,op.total_price,op.discount,op.description\n" +
-                "from ORDER_PRODUCT as op inner join PRODUCTS as p on op.product_id=p.id where op.id=? AND op.is_active=1",new OrderProductMapper(),holder.getKey().intValue());
+        return holder.getKey().intValue();
     }
 
     @Override
     public OrderProduct getOrderProduct(int id) {
-        String sql = "select op.id,op.order_Id,op.product_id,p.name,op.price,op.quantity,op.total_price,op.discount,op.description\n" +
+        String sql = "select op.id,op.order_Id,op.product_id,p.name,op.price,op.quantity,op.total_price,op.discount,op.description,op.is_active\n" +
                 "from ORDER_PRODUCT as op inner join PRODUCTS as p on op.product_id=p.id where op.id=? AND op.is_active=1;";
        try {
            return (OrderProduct) jdbcTemplate.queryForObject(sql,new OrderProductMapper(),id);

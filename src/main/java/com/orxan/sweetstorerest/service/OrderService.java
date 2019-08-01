@@ -1,12 +1,13 @@
 package com.orxan.sweetstorerest.service;
 
+import com.orxan.sweetstorerest.dtos.OrdersDTO;
 import com.orxan.sweetstorerest.model.Order;
 
 import java.util.List;
 
 public interface OrderService {
 
-    List<Order> getOrderList(int pageIndex, int rowsPerPage);
+    OrdersDTO getOrderList(int pageIndex, int rowsPerPage);
 
     Order addNewOrderToList(Order order);
 

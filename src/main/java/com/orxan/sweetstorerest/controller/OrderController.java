@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.controller;
 
+import com.orxan.sweetstorerest.dtos.OrdersDTO;
 import com.orxan.sweetstorerest.model.Order;
 import com.orxan.sweetstorerest.model.ResponseObject;
 import com.orxan.sweetstorerest.service.OrderService;
@@ -17,11 +18,11 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<ResponseObject> getAllOrders(@RequestParam int pageIndex, @RequestParam int maxRows) {
-       List<Order> orders= orderService.getOrderList(pageIndex,maxRows);
-       ResponseObject<List<Order>> responseObject=new ResponseObject<>("success",orders);
-       return createResponseObject(responseObject,HttpStatus.OK);
+       OrdersDTO orders= orderService.getOrderList(pageIndex,maxRows);
+       ResponseObject<OrdersDTO> responseObject=new ResponseObject<>("success",orders);
+       return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -32,7 +33,7 @@ public class OrderController {
     }
 
 
-    @GetMapping("/q")
+    @GetMapping("/search")
     public ResponseEntity<ResponseObject> findOrderById(@RequestParam String id,
                                                         @RequestParam(value="getAll",defaultValue = "false")
                                                                 boolean getAll) {
@@ -48,7 +49,7 @@ public class OrderController {
         return createResponseObject(responseObject,HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public  ResponseEntity<ResponseObject> addOrder(@RequestBody Order order) {
        Order order1= orderService.addNewOrderToList(order);
        ResponseObject<Order> responseObject=new ResponseObject<>("success",order1);
@@ -69,6 +70,7 @@ public class OrderController {
     }
 
     private ResponseEntity<ResponseObject> createResponseObject(ResponseObject data, HttpStatus status) {
+        //TODO: bu methodu sil.
         return new ResponseEntity<>(data,status);
     }
 }

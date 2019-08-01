@@ -20,7 +20,7 @@ public class OrderProductMapper implements RowMapper {
         orderProduct.setTotalPrice(new BigDecimal(String.valueOf(rs.getFloat("total_price"))));
         orderProduct.setDiscount(rs.getFloat("discount"));
         orderProduct.setDescription(rs.getString("description"));
-        orderProduct.setActive(true);
+        orderProduct.setActive(rs.getBoolean("is_active"));
         return orderProduct;
     }
 }

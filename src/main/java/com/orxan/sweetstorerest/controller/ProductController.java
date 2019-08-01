@@ -17,17 +17,17 @@ public class ProductController {
     @Autowired
     private ProductServiceImpl productService;
 
-    @GetMapping
-    public ResponseEntity<ResponseObject> getAllProducts(@RequestParam int startPage,
+    @GetMapping("/")
+    public ResponseEntity<ResponseObject> getAllProducts(@RequestParam() int startPage,
                                                          @RequestParam int rowsPerPage) {
         List<Product> productList=productService.getProductList(startPage,rowsPerPage);
         ResponseObject<List<Product>> responseObject=new ResponseObject<>("success",productList);
         return createResponseObject(responseObject,HttpStatus.OK);
     }
 
-    @GetMapping("/combo-box")
-    public ResponseEntity<ResponseObject> getProductListForComboBox() {
-        List<Product> list=productService.getProductListForComboBox();
+    @GetMapping("/in-stock")
+    public ResponseEntity<ResponseObject> getProductListInStock() {
+        List<Product> list=productService.getProductListInStock();
         ResponseObject<List<Product>> responseObject=new ResponseObject<>("success",list);
         return createResponseObject(responseObject,HttpStatus.OK);
     }
@@ -46,7 +46,7 @@ public class ProductController {
        return createResponseObject(responseObject,HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<ResponseObject> addProduct(@RequestBody Product product) {
        Product productAdded=productService.addProduct(product);
        ResponseObject<Product> responseObject=new ResponseObject<>("success",productAdded);

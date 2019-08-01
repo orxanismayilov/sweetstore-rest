@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
+import com.orxan.sweetstorerest.dtos.OrdersDTO;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.Order;
 import com.orxan.sweetstorerest.repository.daoimpl.OrderDaoImpl;
@@ -16,13 +17,16 @@ public class OrderServiceImpl implements OrderService {
     private OrderDaoImpl orderDao;
 
     @Override
-    public List<Order> getOrderList(int pageIndex, int rowsPerPage) {
+    public OrdersDTO getOrderList(int pageIndex, int rowsPerPage) {
         int totalCount=orderDao.getTotalCountOfOrder();
         int fromIndex=pageIndex*rowsPerPage;
         int toIndex=Math.min(fromIndex+rowsPerPage,totalCount);
         List<Order> orderList=orderDao.getOrderList(fromIndex,toIndex);
+        OrdersDTO ordersDTO=new OrdersDTO();
+        ordersDTO.setCount(orderDao.getTotalCountOfOrder());
+        ordersDTO.setOrders(orderList);
         if (orderList.isEmpty()) throw new ResourceNotFoundException("No products found.");
-        return orderList;
+        return ordersDTO;
     }
 
     @Override
