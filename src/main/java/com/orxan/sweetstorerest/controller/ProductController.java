@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.controller;
 
+import com.orxan.sweetstorerest.dtos.ProductsDTO;
 import com.orxan.sweetstorerest.model.Product;
 import com.orxan.sweetstorerest.model.ResponseObject;
 import com.orxan.sweetstorerest.service.serviceimple.ProductServiceImpl;
@@ -20,9 +21,9 @@ public class ProductController {
     @GetMapping("/")
     public ResponseEntity<ResponseObject> getAllProducts(@RequestParam() int startPage,
                                                          @RequestParam int rowsPerPage) {
-        List<Product> productList=productService.getProductList(startPage,rowsPerPage);
-        ResponseObject<List<Product>> responseObject=new ResponseObject<>("success",productList);
-        return createResponseObject(responseObject,HttpStatus.OK);
+        ProductsDTO productsDTO =productService.getProductList(startPage,rowsPerPage);
+        ResponseObject<ProductsDTO> responseObject=new ResponseObject<>("success",productsDTO);
+        return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @GetMapping("/in-stock")

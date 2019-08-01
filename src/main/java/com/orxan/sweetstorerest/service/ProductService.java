@@ -1,12 +1,13 @@
 package com.orxan.sweetstorerest.service;
 
+import com.orxan.sweetstorerest.dtos.ProductsDTO;
 import com.orxan.sweetstorerest.model.Product;
 
 import java.util.List;
 
 public interface ProductService {
 
-    List<Product> getProductList(int pageIndex, int rowsPerPage);
+    ProductsDTO getProductList(int pageIndex, int rowsPerPage);
 
     Product addProduct(Product product);
 

@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
+import com.orxan.sweetstorerest.dtos.ProductsDTO;
 import com.orxan.sweetstorerest.exceptions.InvalidProductException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.Product;
@@ -34,14 +35,17 @@ public class ProductServiceImpl implements ProductService {
     private String maxPrice;
 
     @Override
-    public List<Product> getProductList(int pageIndex, int rowsPerPage) {
+    public ProductsDTO getProductList(int pageIndex, int rowsPerPage) {
         int totalCount= getTotalCountOfProduct();
         int fromIndex=pageIndex*rowsPerPage;
         int toIndex=Math.min(fromIndex+rowsPerPage,totalCount);
+        ProductsDTO productsDTO=new ProductsDTO();
         List<Product> productList=productDao.getProductList(fromIndex,toIndex);
         if (!productList.isEmpty()) {
-            return productList;
+            productsDTO.setProducts(productList);
+            productsDTO.setCount(productDao.getTotalCountOfProduct());
         } else throw new ResourceNotFoundException("No products found.");
+        return productsDTO;
     }
 
     @Override
