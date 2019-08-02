@@ -21,14 +21,14 @@ public class OrderProductController {
     public ResponseEntity<ResponseObject> getOrderProducts(@PathVariable int orderId) {
         List<OrderProduct>orderProductList=orderProductService.getOrderProductByOrderId(orderId);
         ResponseObject<List<OrderProduct>> responseObject=new ResponseObject<>("success",orderProductList);
-        return createResponseObject(responseObject,HttpStatus.OK);
+        return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getOrderProduct(@PathVariable int id){
         OrderProduct orderProduct=orderProductService.getOrderProduct(id);
         ResponseObject<OrderProduct> responseObject=new ResponseObject<>("success",orderProduct);
-        return createResponseObject(responseObject,HttpStatus.OK);
+        return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @PostMapping("/list/{orderId}")
@@ -36,13 +36,13 @@ public class OrderProductController {
         orderProduct.setOrderId(orderId);
         OrderProduct orderProduct1=orderProductService.saveOrderProduct(orderProduct);
         ResponseObject<OrderProduct> responseObject=new ResponseObject<>("success",orderProduct1);
-        return createResponseObject(responseObject,HttpStatus.CREATED);
+        return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
     @PutMapping("/list/{orderId}/{id}")
     public  ResponseEntity<ResponseObject> updateOrderProduct(@RequestBody OrderProduct orderProduct, @PathVariable int id){
         OrderProduct orderProduct1=orderProductService.updateOrderProduct(orderProduct,id);
         ResponseObject<OrderProduct> responseObject=new ResponseObject<>("success",orderProduct1);
-        return createResponseObject(responseObject,HttpStatus.CREATED);
+        return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
 
     @DeleteMapping("/list/{orderId}/{id}")
@@ -50,9 +50,4 @@ public class OrderProductController {
         orderProductService.removeOrderProductById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("success");
     }
-
-    private ResponseEntity<ResponseObject> createResponseObject(ResponseObject data, HttpStatus status) {
-        return new ResponseEntity<>(data,status);
-    }
-
 }

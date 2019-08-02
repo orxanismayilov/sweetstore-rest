@@ -20,12 +20,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<ResponseObject> login(@RequestBody User user) {
-        ResponseObject<Boolean> responseObject=new ResponseObject<>("success",false);
-
-        //if (userService.validateLogin(user)) {
-            responseObject.setData(userService.validateLogin(user));
-       //    return new ResponseEntity<>(responseObject, HttpStatus.OK);
-        //}
+        ResponseObject<Boolean> responseObject=new ResponseObject<>();
+        responseObject.setData(userService.validateLogin(user));
         return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 }

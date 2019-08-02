@@ -18,7 +18,7 @@ public class ProductController {
     @Autowired
     private ProductServiceImpl productService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<ResponseObject> getAllProducts(@RequestParam() int startPage,
                                                          @RequestParam int rowsPerPage) {
         ProductsDTO productsDTO =productService.getProductList(startPage,rowsPerPage);
@@ -30,28 +30,28 @@ public class ProductController {
     public ResponseEntity<ResponseObject> getProductListInStock() {
         List<Product> list=productService.getProductListInStock();
         ResponseObject<List<Product>> responseObject=new ResponseObject<>("success",list);
-        return createResponseObject(responseObject,HttpStatus.OK);
+        return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getProduct(@PathVariable int id) {
        Product product=productService.getProductById(id);
        ResponseObject<Product> responseObject= new ResponseObject<>("success", product);
-       return createResponseObject(responseObject,HttpStatus.OK);
+       return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @GetMapping("/count")
     public ResponseEntity<ResponseObject> getTotalCount(){
        int count= productService.getTotalCountOfProduct();
        ResponseObject<Integer> responseObject=new ResponseObject<>("success",count);
-       return createResponseObject(responseObject,HttpStatus.OK);
+       return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ResponseObject> addProduct(@RequestBody Product product) {
        Product productAdded=productService.addProduct(product);
        ResponseObject<Product> responseObject=new ResponseObject<>("success",productAdded);
-       return createResponseObject(responseObject,HttpStatus.CREATED);
+       return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -65,11 +65,8 @@ public class ProductController {
     public ResponseEntity<ResponseObject> updateProduct(@RequestBody Product product,@PathVariable int id) {
         Product newProduct=productService.updateProduct(product,id);
         ResponseObject<Product> responseObject=new ResponseObject<>("success",newProduct);
-        return createResponseObject(responseObject,HttpStatus.CREATED);
+        return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
 
-    private ResponseEntity<ResponseObject> createResponseObject(ResponseObject data, HttpStatus status) {
-        return new ResponseEntity<>(data,status);
-    }
 
 }

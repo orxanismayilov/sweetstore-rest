@@ -18,7 +18,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<ResponseObject> getAllOrders(@RequestParam int pageIndex, @RequestParam int maxRows) {
        OrdersDTO orders= orderService.getOrderList(pageIndex,maxRows);
        ResponseObject<OrdersDTO> responseObject=new ResponseObject<>("success",orders);
@@ -29,7 +29,7 @@ public class OrderController {
     public ResponseEntity<ResponseObject> getOrder(@PathVariable  int id) {
         Order order= orderService.getOrder(id);
         ResponseObject<Order> responseObject=new ResponseObject<>("success",order);
-        return createResponseObject(responseObject,HttpStatus.OK);
+        return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
 
@@ -39,21 +39,21 @@ public class OrderController {
                                                                 boolean getAll) {
         List<Order> list=orderService.searchOrderById(id,getAll);
         ResponseObject<List<Order>> responseObject=new ResponseObject<>("success",list);
-        return createResponseObject(responseObject,HttpStatus.OK);
+        return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @GetMapping("/count")
     public ResponseEntity<ResponseObject> getTotalCountofOrder() {
         int count=orderService.getTotalCountOfOrder();
         ResponseObject responseObject=new ResponseObject("success",count);
-        return createResponseObject(responseObject,HttpStatus.OK);
+        return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public  ResponseEntity<ResponseObject> addOrder(@RequestBody Order order) {
        Order order1= orderService.addNewOrderToList(order);
        ResponseObject<Order> responseObject=new ResponseObject<>("success",order1);
-       return createResponseObject(responseObject,HttpStatus.CREATED);
+       return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -66,11 +66,6 @@ public class OrderController {
     public ResponseEntity<ResponseObject> updateOrder(@RequestBody Order order, @PathVariable int id) {
        Order order1= orderService.updateOrderById(order,id);
        ResponseObject<Order> responseObject=new ResponseObject<>("success",order1);
-       return createResponseObject(responseObject,HttpStatus.CREATED);
-    }
-
-    private ResponseEntity<ResponseObject> createResponseObject(ResponseObject data, HttpStatus status) {
-        //TODO: bu methodu sil.
-        return new ResponseEntity<>(data,status);
+       return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
 }
