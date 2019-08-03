@@ -1,6 +1,8 @@
 package com.orxan.sweetstorerest.repository.daoimpl;
 import com.orxan.sweetstorerest.mappers.OrderProductMapper;
+import com.orxan.sweetstorerest.mappers.OrderProductSummaryMapper;
 import com.orxan.sweetstorerest.model.OrderProduct;
+import com.orxan.sweetstorerest.model.OrderProductSummary;
 import com.orxan.sweetstorerest.repository.OrderProductDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -85,5 +87,15 @@ public class OrderProductDaoImpl implements OrderProductDao {
     public BigDecimal getTotalDiscount(int orderId) {
         String sql="SELECT SUM(discount) FROM ORDER_PRODUCT WHERE order_Id=? AND is_active=1;";
         return jdbcTemplate.queryForObject(sql,BigDecimal.class,orderId);
+    }
+
+    @Override
+    public OrderProductSummary getOrderProductSummary(int orderId) {
+        String sql="SELECT SUM(op.discount) AS total_discount,SUM(op.total_price) AS total_price,GROUP_CONCAT(op.description separator ',') AS description FROM order_product op WHERE op.order_Id=? AND op.is_active=1;";
+        try {
+           return (OrderProductSummary) jdbcTemplate.queryForObject(sql,new OrderProductSummaryMapper(),orderId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 }

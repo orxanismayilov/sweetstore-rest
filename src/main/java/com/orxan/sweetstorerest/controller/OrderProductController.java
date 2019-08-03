@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.controller;
 
+import com.orxan.sweetstorerest.dtos.OrderProductsDTO;
 import com.orxan.sweetstorerest.model.OrderProduct;
 import com.orxan.sweetstorerest.model.ResponseObject;
 import com.orxan.sweetstorerest.service.OrderProductService;
@@ -7,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/orderproducts")
@@ -19,8 +18,8 @@ public class OrderProductController {
 
     @GetMapping("/list/{orderId}")
     public ResponseEntity<ResponseObject> getOrderProducts(@PathVariable int orderId) {
-        List<OrderProduct>orderProductList=orderProductService.getOrderProductByOrderId(orderId);
-        ResponseObject<List<OrderProduct>> responseObject=new ResponseObject<>("success",orderProductList);
+        OrderProductsDTO dto =orderProductService.getOrderProductByOrderId(orderId);
+        ResponseObject<OrderProductsDTO> responseObject=new ResponseObject<>("success",dto);
         return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 

@@ -1,8 +1,10 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
+import com.orxan.sweetstorerest.dtos.OrderProductsDTO;
 import com.orxan.sweetstorerest.exceptions.InvalidOrderProductException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.OrderProduct;
+import com.orxan.sweetstorerest.model.OrderProductSummary;
 import com.orxan.sweetstorerest.model.Product;
 import com.orxan.sweetstorerest.repository.daoimpl.OrderProductDaoImpl;
 import com.orxan.sweetstorerest.service.OrderProductService;
@@ -55,10 +57,14 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
-    public List<OrderProduct> getOrderProductByOrderId(int orderId) {
+    public OrderProductsDTO getOrderProductByOrderId(int orderId) {
         List<OrderProduct> orderProductList=orderProductDao.getListByOrderId(orderId);
+        OrderProductSummary summary=orderProductDao.getOrderProductSummary(orderId);
+        OrderProductsDTO dto=new OrderProductsDTO();
         if (orderProductList.isEmpty()) throw new ResourceNotFoundException("No OrderProduct found");
-        return orderProductList;
+        dto.setSummary(summary);
+        dto.setOrderProducts(orderProductList);
+        return dto;
     }
 
     @Override

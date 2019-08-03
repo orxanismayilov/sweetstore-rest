@@ -1,6 +1,7 @@
 package com.orxan.sweetstorerest.repository;
 
 import com.orxan.sweetstorerest.model.OrderProduct;
+import com.orxan.sweetstorerest.model.OrderProductSummary;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,4 +21,6 @@ public interface OrderProductDao {
     void updateOrderProduct(OrderProduct newOrderProduct, int id);
 
     BigDecimal getTotalDiscount(int orderId);
+
+    OrderProductSummary getOrderProductSummary(int orderId);
 }

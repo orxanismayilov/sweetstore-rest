@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.service;
 
+import com.orxan.sweetstorerest.dtos.OrderProductsDTO;
 import com.orxan.sweetstorerest.model.OrderProduct;
 
 import java.math.BigDecimal;
@@ -13,7 +14,7 @@ public interface OrderProductService {
 
     OrderProduct getOrderProduct(int id);
 
-    List<OrderProduct> getOrderProductByOrderId(int orderId);
+    OrderProductsDTO getOrderProductByOrderId(int orderId);
 
     OrderProduct updateOrderProduct(OrderProduct newOrderProduct, int id);
 
