@@ -10,5 +10,5 @@ public interface UserDao {
 
     void deleteUserById(int id);
 
-    boolean validateLogin(User user);
+    User validateLogin(User user);
 }

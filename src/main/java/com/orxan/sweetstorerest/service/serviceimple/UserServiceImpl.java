@@ -1,7 +1,7 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
+import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.User;
-import com.orxan.sweetstorerest.repository.UserDao;
 import com.orxan.sweetstorerest.repository.daoimpl.UserDaoImpl;
 import com.orxan.sweetstorerest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,9 @@ public class UserServiceImpl implements UserService {
     private UserDaoImpl userDao;
 
     @Override
-    public boolean validateLogin(User user) {
-       return userDao.validateLogin(user);
+    public User validateLogin(User user) {
+       User u=userDao.validateLogin(user);
+       if (u==null) throw new ResourceNotFoundException("User name or password is wrong.");
+       return u;
     }
 }

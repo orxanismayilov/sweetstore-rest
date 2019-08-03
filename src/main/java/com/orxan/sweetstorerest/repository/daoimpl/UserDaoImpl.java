@@ -33,13 +33,15 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean validateLogin(User user) {
+    public User validateLogin(User user) {
         String sql="SELECT * FROM USERS WHERE name=? AND  is_active=1";
         try {
             User u= (User) jdbcTemplate.queryForObject(sql,new UserMapper(),user.getName());
-            return  authcateUserPassword(u,user.getPassword());
+            if (authcateUserPassword(u,user.getPassword())) {
+                return u;
+            } else return null;
         } catch (EmptyResultDataAccessException e) {
-            return false;
+            return null;
         }
     }
 

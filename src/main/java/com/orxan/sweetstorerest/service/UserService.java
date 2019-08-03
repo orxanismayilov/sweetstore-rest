@@ -5,5 +5,5 @@ import com.orxan.sweetstorerest.model.User;
 
 public interface UserService {
 
-    boolean validateLogin(User user);
+    User validateLogin(User user);
 }
