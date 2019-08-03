@@ -9,6 +9,7 @@ import com.orxan.sweetstorerest.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -45,7 +46,12 @@ public class OrderServiceImpl implements OrderService {
     public Order getOrder(int id) {
         Order order=orderDao.getOrder(id);
         if (order==null) throw new ResourceNotFoundException("Order not found. Id="+id);
-        order.setTotalDiscount(orderProductService.getTotalDiscount(id));
+        BigDecimal totalDiscount=orderProductService.getTotalDiscount(id);
+        if (totalDiscount!=null) {
+            order.setTotalDiscount(totalDiscount);
+        } else {
+            order.setTotalDiscount(new BigDecimal("0"));
+        }
         return order;
     }
 
