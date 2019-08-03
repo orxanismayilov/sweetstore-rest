@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.repository.daoimpl;
 
+import com.orxan.sweetstorerest.enums.UserRole;
 import com.orxan.sweetstorerest.mappers.UserMapper;
 import com.orxan.sweetstorerest.model.User;
 import com.orxan.sweetstorerest.repository.UserDao;
@@ -43,6 +44,18 @@ public class UserDaoImpl implements UserDao {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    @Override
+    public UserRole getUserRole(String username) {
+        String sql="SELECT * FROM USERS WHERE name=? AND  is_active=1";
+        try {
+            User user=(User) jdbcTemplate.queryForObject(sql,new UserMapper(),username);
+            user.getRole();
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+        return null;
     }
 
     private boolean authcateUserPassword(User user, String password) {

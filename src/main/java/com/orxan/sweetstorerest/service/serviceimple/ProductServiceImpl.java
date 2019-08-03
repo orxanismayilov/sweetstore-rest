@@ -2,6 +2,7 @@ package com.orxan.sweetstorerest.service.serviceimple;
 
 import com.orxan.sweetstorerest.dtos.ProductsDTO;
 import com.orxan.sweetstorerest.exceptions.InvalidProductException;
+import com.orxan.sweetstorerest.exceptions.PermissionDeniedException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.Product;
 import com.orxan.sweetstorerest.repository.daoimpl.ProductDaoImpl;
@@ -19,6 +20,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductDaoImpl productDao;
+    @Autowired
+    private UserServiceImpl userService;
+
     @Value("${error.product.nameSize}")
     private String nameSize;
     @Value("${error.product.nullName}")
@@ -35,48 +39,54 @@ public class ProductServiceImpl implements ProductService {
     private String maxPrice;
 
     @Override
-    public ProductsDTO getProductList(int pageIndex, int rowsPerPage) {
-        int totalCount= getTotalCountOfProduct();
-        int fromIndex=pageIndex*rowsPerPage;
-        int toIndex=Math.min(fromIndex+rowsPerPage,totalCount);
-        ProductsDTO productsDTO=new ProductsDTO();
-        List<Product> productList=productDao.getProductList(fromIndex,toIndex);
-        if (!productList.isEmpty()) {
-            productsDTO.setProducts(productList);
-            productsDTO.setCount(productDao.getTotalCountOfProduct());
-        } else throw new ResourceNotFoundException("No products found.");
-        return productsDTO;
+    public ProductsDTO getProductList(int pageIndex, int rowsPerPage,String username) {
+        if (userService.getUserRole(username).getCode()>=1) {
+            int totalCount= productDao.getTotalCountOfProduct();
+            int fromIndex=pageIndex*rowsPerPage;
+            int toIndex=Math.min(fromIndex+rowsPerPage,totalCount);
+            ProductsDTO productsDTO=new ProductsDTO();
+            List<Product> productList=productDao.getProductList(fromIndex,toIndex);
+            if (!productList.isEmpty()) {
+                productsDTO.setProducts(productList);
+                productsDTO.setCount(productDao.getTotalCountOfProduct());
+            } else throw new ResourceNotFoundException("No products found.");
+            return productsDTO;
+        } else throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
-    public Product addProduct(Product product) {
-        List<String> errorList= isProductValid(product);
-        if (errorList.isEmpty()) {
-            Product checkProduct=productDao.checkProductNameIsExist(product.getName());
-            if (checkProduct==null) {
-                return productDao.addProduct(product);
-            } else {
-                checkProduct.setQuantity(product.getQuantity()+checkProduct.getQuantity());
-                checkProduct.setPrice(product.getPrice());
-                productDao.updateProduct(checkProduct,checkProduct.getId());
-            }
-        } else
-            throw new InvalidProductException(errorList);
-        return null;
+    public Product addProduct(Product product,String username) {
+       if(userService.getUserRole(username).getCode()>=1) {
+           List<String> errorList= isProductValid(product);
+           if (errorList.isEmpty()) {
+               Product checkProduct=productDao.checkProductNameIsExist(product.getName());
+               if (checkProduct==null) {
+                   return productDao.addProduct(product);
+               } else {
+                   checkProduct.setQuantity(product.getQuantity()+checkProduct.getQuantity());
+                   checkProduct.setPrice(product.getPrice());
+                   productDao.updateProduct(checkProduct,checkProduct.getId());
+               }
+           } else
+               throw new InvalidProductException(errorList);
+           return null;
+       } else throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
-    public Product updateProduct(Product product, int oldProductId) {
-        if (productDao.isProductExist(oldProductId)) {
-            List<String> errorList = isProductValid(product);
-            if (errorList.isEmpty()) {
-                return productDao.updateProduct(product, oldProductId);
+    public Product updateProduct(Product product, int oldProductId,String username) {
+        if (userService.getUserRole(username).getCode()>=1) {
+            if (productDao.isProductExist(oldProductId)) {
+                List<String> errorList = isProductValid(product);
+                if (errorList.isEmpty()) {
+                    return productDao.updateProduct(product, oldProductId);
+                } else {
+                    throw new InvalidProductException(errorList);
+                }
             } else {
-                throw new InvalidProductException(errorList);
+                throw new ResourceNotFoundException("Product not found. Id=" + oldProductId);
             }
-        } else {
-            throw new ResourceNotFoundException("Product not found. Id="+oldProductId);
-        }
+        } else throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
@@ -117,35 +127,42 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean deleteProductByID(int id) {
-       boolean exist =productDao.isProductExist(id);
-       if (exist) {
-           productDao.deleteProductById(id);
-           return true;
-       } else throw new ResourceNotFoundException("Product not found. Id="+id);
+    public boolean deleteProductByID(int id,String username) {
+        if (userService.getUserRole(username).getCode()>1) {
+            boolean exist = productDao.isProductExist(id);
+            if (exist) {
+                productDao.deleteProductById(id);
+                return true;
+            } else throw new ResourceNotFoundException("Product not found. Id=" + id);
+        }
+        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
-    public Product getProductById(int id) {
-        Product product=productDao.getProductById(id);
-        if (product!=null) {
-            return product;
-        } else throw new ResourceNotFoundException("Product not found. id="+id);
+    public Product getProductById(int id,String username) {
+        if (userService.getUserRole(username).getCode()>=1) {
+            Product product = productDao.getProductById(id);
+            if (product != null) {
+                return product;
+            } else throw new ResourceNotFoundException("Product not found. id=" + id);
+        }
+        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
-    public List<Product> getProductListInStock() {
-        return productDao.getProductListForComboBox();
+    public List<Product> getProductListInStock(String username) {
+        if (userService.getUserRole(username).getCode()>=1) {
+            return productDao.getProductListForComboBox();
+        }
+        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
-    public int getTotalCountOfProduct() {
-        return productDao.getTotalCountOfProduct();
-    }
-
-    @Override
-    public Product checkProductNameIsExist(String name) {
-       return productDao.checkProductNameIsExist(name);
+    public int getTotalCountOfProduct(String username) {
+        if (userService.getUserRole(username).getCode()>=1) {
+            return productDao.getTotalCountOfProduct();
+        }
+        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     private String renameProduct(String productName) {

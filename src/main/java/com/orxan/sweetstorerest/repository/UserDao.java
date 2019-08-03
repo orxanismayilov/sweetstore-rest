@@ -1,6 +1,7 @@
 package com.orxan.sweetstorerest.repository;
 
 
+import com.orxan.sweetstorerest.enums.UserRole;
 import com.orxan.sweetstorerest.model.User;
 
 public interface UserDao {
@@ -11,4 +12,6 @@ public interface UserDao {
     void deleteUserById(int id);
 
     User validateLogin(User user);
+
+    UserRole getUserRole(String username);
 }

@@ -7,21 +7,19 @@ import java.util.List;
 
 public interface ProductService {
 
-    ProductsDTO getProductList(int pageIndex, int rowsPerPage);
+    ProductsDTO getProductList(int pageIndex, int rowsPerPage,String username);
 
-    Product addProduct(Product product);
+    Product addProduct(Product product,String username);
 
-    Product updateProduct(Product product, int oldProductId);
+    Product updateProduct(Product product, int oldProductId,String username);
 
     List<String> isProductValid(Product product);
 
-    boolean deleteProductByID(int id);
+    boolean deleteProductByID(int id,String username);
 
-    Product getProductById(int id);
+    Product getProductById(int id,String username);
 
-    List<Product> getProductListInStock();
+    List<Product> getProductListInStock(String username);
 
-    int getTotalCountOfProduct();
-
-     Product checkProductNameIsExist(String name);
+    int getTotalCountOfProduct(String username);
 }
