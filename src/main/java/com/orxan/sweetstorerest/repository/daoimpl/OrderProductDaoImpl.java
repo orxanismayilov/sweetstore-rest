@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -69,7 +70,7 @@ public class OrderProductDaoImpl implements OrderProductDao {
 
     @Override
     public boolean isOrderProductExists(int id) {
-        String sql="SELECT COUNT(*) FROM ORDER_PRODUCT WHERE id=?;";
+        String sql="SELECT COUNT(*) FROM ORDER_PRODUCT WHERE id=? AND is_active=1;";
         int count=jdbcTemplate.queryForObject(sql,Integer.class,id);
         return count > 0;
     }
@@ -78,5 +79,11 @@ public class OrderProductDaoImpl implements OrderProductDao {
     public void updateOrderProduct(OrderProduct orderProduct, int id) {
         String sql = "UPDATE ORDER_PRODUCT set quantity=?,discount=?,total_price=?,description=? where Id = ? ";
         jdbcTemplate.update(sql,orderProduct.getProductQuantity(),orderProduct.getDiscount(),orderProduct.getTotalPrice().floatValue(),orderProduct.getDescription(),id);
+    }
+
+    @Override
+    public BigDecimal getTotalDiscount(int orderId) {
+        String sql="SELECT SUM(discount) FROM ORDER_PRODUCT WHERE order_Id=? AND is_active=1;";
+        return jdbcTemplate.queryForObject(sql,BigDecimal.class,orderId);
     }
 }

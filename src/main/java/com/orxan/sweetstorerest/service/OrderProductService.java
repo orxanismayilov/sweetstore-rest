@@ -2,6 +2,7 @@ package com.orxan.sweetstorerest.service;
 
 import com.orxan.sweetstorerest.model.OrderProduct;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface OrderProductService {
@@ -17,4 +18,6 @@ public interface OrderProductService {
     OrderProduct updateOrderProduct(OrderProduct newOrderProduct, int id);
 
     List<String> validateOrderProduct(OrderProduct orderProduct);
+
+    BigDecimal getTotalDiscount(int orderId);
 }

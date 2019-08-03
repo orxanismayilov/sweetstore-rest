@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,5 +94,10 @@ public class OrderProductServiceImpl implements OrderProductService {
             }
         }
         return errorList;
+    }
+
+    @Override
+    public BigDecimal getTotalDiscount(int orderId) {
+       return orderProductDao.getTotalDiscount(orderId);
     }
 }

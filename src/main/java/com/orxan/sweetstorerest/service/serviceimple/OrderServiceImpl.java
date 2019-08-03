@@ -4,6 +4,7 @@ import com.orxan.sweetstorerest.dtos.OrdersDTO;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.Order;
 import com.orxan.sweetstorerest.repository.daoimpl.OrderDaoImpl;
+import com.orxan.sweetstorerest.service.OrderProductService;
 import com.orxan.sweetstorerest.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderDaoImpl orderDao;
+    @Autowired
+    private OrderProductService orderProductService;
 
     @Override
     public OrdersDTO getOrderList(int pageIndex, int rowsPerPage) {
@@ -42,6 +45,7 @@ public class OrderServiceImpl implements OrderService {
     public Order getOrder(int id) {
         Order order=orderDao.getOrder(id);
         if (order==null) throw new ResourceNotFoundException("Order not found. Id="+id);
+        order.setTotalDiscount(orderProductService.getTotalDiscount(id));
         return order;
     }
 
