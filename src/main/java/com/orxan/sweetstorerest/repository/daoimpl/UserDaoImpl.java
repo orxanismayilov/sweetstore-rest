@@ -51,11 +51,10 @@ public class UserDaoImpl implements UserDao {
         String sql="SELECT * FROM USERS WHERE name=? AND  is_active=1";
         try {
             User user=(User) jdbcTemplate.queryForObject(sql,new UserMapper(),username);
-            user.getRole();
+            return user.getRole();
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
-        return null;
     }
 
     private boolean authcateUserPassword(User user, String password) {
