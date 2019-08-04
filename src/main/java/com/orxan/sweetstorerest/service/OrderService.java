@@ -7,17 +7,17 @@ import java.util.List;
 
 public interface OrderService {
 
-    OrdersDTO getOrderList(int pageIndex, int rowsPerPage);
+    OrdersDTO getOrderList(int pageIndex, int rowsPerPage,String username);
 
-    Order addNewOrderToList(Order order);
+    Order addOrder(Order order, String username);
 
-    List<Order> searchOrderById(String id, boolean searchAll);
+    List<Order> searchOrderById(String id, boolean searchAll,String username);
 
-    Order getOrder(int id);
+    Order getOrder(int id,String username);
 
-    boolean deleteOrderByTransactionId(int transactionId);
+    boolean deleteOrderByTransactionId(int transactionId,String username);
 
-    Order updateOrderById(Order newOrder, int orderId);
+    Order updateOrderById(Order newOrder, int orderId,String username);
 
-    int getTotalCountOfOrder();
+    int getTotalCountOfOrder(String username);
 }
