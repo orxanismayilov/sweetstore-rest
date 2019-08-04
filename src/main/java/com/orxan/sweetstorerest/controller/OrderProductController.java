@@ -17,36 +17,40 @@ public class OrderProductController {
     private  OrderProductService orderProductService;
 
     @GetMapping("/list/{orderId}")
-    public ResponseEntity<ResponseObject> getOrderProducts(@PathVariable int orderId) {
-        OrderProductsDTO dto =orderProductService.getOrderProductByOrderId(orderId);
+    public ResponseEntity<ResponseObject> getOrderProducts(@PathVariable int orderId,@RequestParam String username) {
+        OrderProductsDTO dto =orderProductService.getOrderProductByOrderId(orderId,username);
         ResponseObject<OrderProductsDTO> responseObject=new ResponseObject<>("success",dto);
         return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> getOrderProduct(@PathVariable int id){
-        OrderProduct orderProduct=orderProductService.getOrderProduct(id);
+    public ResponseEntity<ResponseObject> getOrderProduct(@PathVariable int id,@RequestParam String username){
+        OrderProduct orderProduct=orderProductService.getOrderProduct(id,username);
         ResponseObject<OrderProduct> responseObject=new ResponseObject<>("success",orderProduct);
         return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @PostMapping("/list/{orderId}")
-    public  ResponseEntity<ResponseObject> addOrderProduct(@RequestBody OrderProduct orderProduct, @PathVariable int orderId){
+    public  ResponseEntity<ResponseObject> addOrderProduct(@RequestBody OrderProduct orderProduct,
+                                                           @PathVariable int orderId,
+                                                           @RequestParam String username){
         orderProduct.setOrderId(orderId);
-        OrderProduct orderProduct1=orderProductService.saveOrderProduct(orderProduct);
+        OrderProduct orderProduct1=orderProductService.saveOrderProduct(orderProduct,username);
         ResponseObject<OrderProduct> responseObject=new ResponseObject<>("success",orderProduct1);
         return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
     @PutMapping("/list/{orderId}/{id}")
-    public  ResponseEntity<ResponseObject> updateOrderProduct(@RequestBody OrderProduct orderProduct, @PathVariable int id){
-        OrderProduct orderProduct1=orderProductService.updateOrderProduct(orderProduct,id);
+    public  ResponseEntity<ResponseObject> updateOrderProduct(@RequestBody OrderProduct orderProduct,
+                                                              @PathVariable int id,
+                                                              @RequestParam String username){
+        OrderProduct orderProduct1=orderProductService.updateOrderProduct(orderProduct,id,username);
         ResponseObject<OrderProduct> responseObject=new ResponseObject<>("success",orderProduct1);
         return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
 
     @DeleteMapping("/list/{orderId}/{id}")
-    public ResponseEntity deleteOrderProduct(@PathVariable int id) {
-        orderProductService.removeOrderProductById(id);
+    public ResponseEntity deleteOrderProduct(@PathVariable int id,@RequestParam String username) {
+        orderProductService.removeOrderProductById(id,username);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("success");
     }
 }

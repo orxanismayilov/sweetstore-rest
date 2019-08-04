@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
         if (userService.getUserRole(username).getCode()>=1) {
             Order order = orderDao.getOrder(id);
             if (order == null) throw new ResourceNotFoundException("Order not found. Id=" + id);
-            BigDecimal totalDiscount = orderProductService.getTotalDiscount(id);
+            BigDecimal totalDiscount = orderProductService.getTotalDiscount(id,username);
             if (totalDiscount != null) {
                 order.setTotalDiscount(totalDiscount);
             } else {

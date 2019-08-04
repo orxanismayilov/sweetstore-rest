@@ -2,6 +2,7 @@ package com.orxan.sweetstorerest.service.serviceimple;
 
 import com.orxan.sweetstorerest.dtos.OrderProductsDTO;
 import com.orxan.sweetstorerest.exceptions.InvalidOrderProductException;
+import com.orxan.sweetstorerest.exceptions.PermissionDeniedException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.OrderProduct;
 import com.orxan.sweetstorerest.model.OrderProductSummary;
@@ -24,6 +25,9 @@ public class OrderProductServiceImpl implements OrderProductService {
     private  OrderProductDaoImpl orderProductDao;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private UserServiceImpl userService;
+
     @Value("${error.product.negativeQuantity}")
     private String negativeQuantity;
     @Value("${error.orderProduct.possibleQuantity}")
@@ -33,55 +37,69 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Value("${error.orderProduct.negativeDiscount}")
     private String negativeDiscount;
     @Override
-    public OrderProduct saveOrderProduct(OrderProduct orderProduct) {
-        List<String> errorList=validateOrderProduct(orderProduct);
-        if (errorList.isEmpty()){
-            int i= orderProductDao.saveOrderProduct(orderProduct);
-            return orderProductDao.getOrderProduct(i);
+    public OrderProduct saveOrderProduct(OrderProduct orderProduct,String username) {
+        if (userService.getUserRole(username).getCode()>=1) {
+            List<String> errorList = validateOrderProduct(orderProduct, username);
+            if (errorList.isEmpty()) {
+                int i = orderProductDao.saveOrderProduct(orderProduct);
+                return orderProductDao.getOrderProduct(i);
+            } else throw new InvalidOrderProductException(errorList);
         }
-        else throw new InvalidOrderProductException(errorList);
+        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
-    public boolean removeOrderProductById(int id) {
-        if (orderProductDao.isOrderProductExists(id)) {
-            orderProductDao.removeOrderProductById(id);
-            return true;
-        } else throw new ResourceNotFoundException("OrderProduct not found.Id="+id);
+    public boolean removeOrderProductById(int id,String username) {
+        if (userService.getUserRole(username).getCode()>=1) {
+            if (orderProductDao.isOrderProductExists(id)) {
+                orderProductDao.removeOrderProductById(id);
+                return true;
+            } else throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
+        }
+        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
-    public OrderProduct getOrderProduct(int id) {
-        if (orderProductDao==null) throw new ResourceNotFoundException("OrderProduct not found.Id="+id);
-        return orderProductDao.getOrderProduct(id);
+    public OrderProduct getOrderProduct(int id,String username) {
+        if (userService.getUserRole(username).getCode()>=1) {
+            if (orderProductDao == null) throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
+            return orderProductDao.getOrderProduct(id);
+        }
+        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
-    public OrderProductsDTO getOrderProductByOrderId(int orderId) {
-        List<OrderProduct> orderProductList=orderProductDao.getListByOrderId(orderId);
-        OrderProductSummary summary=orderProductDao.getOrderProductSummary(orderId);
-        OrderProductsDTO dto=new OrderProductsDTO();
-        if (orderProductList.isEmpty()) throw new ResourceNotFoundException("No OrderProduct found");
-        dto.setSummary(summary);
-        dto.setOrderProducts(orderProductList);
-        return dto;
+    public OrderProductsDTO getOrderProductByOrderId(int orderId,String username) {
+        if (userService.getUserRole(username).getCode()>=1) {
+            List<OrderProduct> orderProductList = orderProductDao.getListByOrderId(orderId);
+            OrderProductSummary summary = orderProductDao.getOrderProductSummary(orderId);
+            OrderProductsDTO dto = new OrderProductsDTO();
+            if (orderProductList.isEmpty()) throw new ResourceNotFoundException("No OrderProduct found");
+            dto.setSummary(summary);
+            dto.setOrderProducts(orderProductList);
+            return dto;
+        }
+        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
-    public OrderProduct updateOrderProduct(OrderProduct newOrderProduct, int id) {
-        List<String> errorList=validateOrderProduct(newOrderProduct);
-        if (errorList.isEmpty()) {
-            orderProductDao.updateOrderProduct(newOrderProduct,id);
-            OrderProduct orderProduct= orderProductDao.getOrderProduct(id);
-            if (orderProduct==null) throw new ResourceNotFoundException("OrderProduct not found.Id="+id);
-            return orderProduct;
-        } else throw new InvalidOrderProductException(errorList);
+    public OrderProduct updateOrderProduct(OrderProduct newOrderProduct, int id,String username) {
+        if (userService.getUserRole(username).getCode()>=1) {
+            List<String> errorList = validateOrderProduct(newOrderProduct, username);
+            if (errorList.isEmpty()) {
+                orderProductDao.updateOrderProduct(newOrderProduct, id);
+                OrderProduct orderProduct = orderProductDao.getOrderProduct(id);
+                if (orderProduct == null) throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
+                return orderProduct;
+            } else throw new InvalidOrderProductException(errorList);
+        }
+        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
-    public List<String> validateOrderProduct(OrderProduct orderProduct) {
+    public List<String> validateOrderProduct(OrderProduct orderProduct,String username) {
         List<String> errorList=new ArrayList<>();
-        Product product= productService.getProductById(orderProduct.getProductId());;
+        Product product= productService.getProductById(orderProduct.getProductId(),"");
 
         if (orderProduct!=null) {
             if (product != null) {
@@ -103,7 +121,10 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
-    public BigDecimal getTotalDiscount(int orderId) {
-       return orderProductDao.getTotalDiscount(orderId);
+    public BigDecimal getTotalDiscount(int orderId,String username) {
+        if (userService.getUserRole(username).getCode()>=1) {
+            return orderProductDao.getTotalDiscount(orderId);
+        }
+        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 }

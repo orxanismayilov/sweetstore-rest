@@ -8,17 +8,17 @@ import java.util.List;
 
 public interface OrderProductService {
 
-    OrderProduct saveOrderProduct(OrderProduct orderProduct);
+    OrderProduct saveOrderProduct(OrderProduct orderProduct,String username);
 
-    boolean removeOrderProductById(int id);
+    boolean removeOrderProductById(int id,String username);
 
-    OrderProduct getOrderProduct(int id);
+    OrderProduct getOrderProduct(int id,String username);
 
-    OrderProductsDTO getOrderProductByOrderId(int orderId);
+    OrderProductsDTO getOrderProductByOrderId(int orderId,String username);
 
-    OrderProduct updateOrderProduct(OrderProduct newOrderProduct, int id);
+    OrderProduct updateOrderProduct(OrderProduct newOrderProduct, int id,String username);
 
-    List<String> validateOrderProduct(OrderProduct orderProduct);
+    List<String> validateOrderProduct(OrderProduct orderProduct,String username);
 
-    BigDecimal getTotalDiscount(int orderId);
+    BigDecimal getTotalDiscount(int orderId,String username);
 }
