@@ -44,8 +44,9 @@ public class OrderProductServiceImpl implements OrderProductService {
                 int i = orderProductDao.saveOrderProduct(orderProduct);
                 return orderProductDao.getOrderProduct(i);
             } else throw new InvalidOrderProductException(errorList);
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
@@ -55,8 +56,9 @@ public class OrderProductServiceImpl implements OrderProductService {
                 orderProductDao.removeOrderProductById(id);
                 return true;
             } else throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
@@ -64,8 +66,9 @@ public class OrderProductServiceImpl implements OrderProductService {
         if (userService.getUserRole(username).getCode()>=1) {
             if (orderProductDao == null) throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
             return orderProductDao.getOrderProduct(id);
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
@@ -74,12 +77,12 @@ public class OrderProductServiceImpl implements OrderProductService {
             List<OrderProduct> orderProductList = orderProductDao.getListByOrderId(orderId);
             OrderProductSummary summary = orderProductDao.getOrderProductSummary(orderId);
             OrderProductsDTO dto = new OrderProductsDTO();
-            if (orderProductList.isEmpty()) throw new ResourceNotFoundException("No OrderProduct found");
             dto.setSummary(summary);
             dto.setOrderProducts(orderProductList);
             return dto;
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
@@ -92,8 +95,9 @@ public class OrderProductServiceImpl implements OrderProductService {
                 if (orderProduct == null) throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
                 return orderProduct;
             } else throw new InvalidOrderProductException(errorList);
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
@@ -101,20 +105,18 @@ public class OrderProductServiceImpl implements OrderProductService {
         List<String> errorList=new ArrayList<>();
         Product product= productService.getProductById(orderProduct.getProductId(),"");
 
-        if (orderProduct!=null) {
-            if (product != null) {
-                if (orderProduct.getProductQuantity() <= 0) {
-                    errorList.add(negativeQuantity);
-                }
-                if (orderProduct.getProductQuantity()>product.getQuantity()){
-                    errorList.add(possibleQuantity+"--Current quantity is :"+product.getQuantity());
-                }
-                if (orderProduct.getDiscount()<0){
-                    errorList.add(negativeDiscount);
-                }
-                if(0 > orderProduct.getTotalPrice().floatValue()){
-                    errorList.add(negativeTotalPrice);
-                }
+        if (product != null) {
+            if (orderProduct.getProductQuantity() <= 0) {
+                errorList.add(negativeQuantity);
+            }
+            if (orderProduct.getProductQuantity()>product.getQuantity()){
+                errorList.add(possibleQuantity+"--Current quantity is :"+product.getQuantity());
+            }
+            if (orderProduct.getDiscount()<0){
+                errorList.add(negativeDiscount);
+            }
+            if(0 > orderProduct.getTotalPrice().floatValue()){
+                errorList.add(negativeTotalPrice);
             }
         }
         return errorList;
@@ -124,7 +126,8 @@ public class OrderProductServiceImpl implements OrderProductService {
     public BigDecimal getTotalDiscount(int orderId,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             return orderProductDao.getTotalDiscount(orderId);
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 }

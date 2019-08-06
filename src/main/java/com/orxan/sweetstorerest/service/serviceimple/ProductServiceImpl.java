@@ -46,12 +46,12 @@ public class ProductServiceImpl implements ProductService {
             int toIndex=Math.min(fromIndex+rowsPerPage,totalCount);
             ProductsDTO productsDTO=new ProductsDTO();
             List<Product> productList=productDao.getProductList(fromIndex,toIndex);
-            if (!productList.isEmpty()) {
-                productsDTO.setProducts(productList);
-                productsDTO.setCount(productDao.getTotalCountOfProduct());
-            } else throw new ResourceNotFoundException("No products found.");
+            productsDTO.setProducts(productList);
+            productsDTO.setCount(productDao.getTotalCountOfProduct());
             return productsDTO;
-        } else throw new PermissionDeniedException("You don't have permission for this action.");
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
+        }
     }
 
     @Override
@@ -70,7 +70,9 @@ public class ProductServiceImpl implements ProductService {
            } else
                throw new InvalidProductException(errorList);
            return null;
-       } else throw new PermissionDeniedException("You don't have permission for this action.");
+       } else {
+           throw new PermissionDeniedException("You don't have permission for this action.");
+       }
     }
 
     @Override
@@ -86,7 +88,9 @@ public class ProductServiceImpl implements ProductService {
             } else {
                 throw new ResourceNotFoundException("Product not found. Id=" + oldProductId);
             }
-        } else throw new PermissionDeniedException("You don't have permission for this action.");
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
+        }
     }
 
     @Override
@@ -134,8 +138,9 @@ public class ProductServiceImpl implements ProductService {
                 productDao.deleteProductById(id);
                 return true;
             } else throw new ResourceNotFoundException("Product not found. Id=" + id);
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
@@ -145,24 +150,27 @@ public class ProductServiceImpl implements ProductService {
             if (product != null) {
                 return product;
             } else throw new ResourceNotFoundException("Product not found. id=" + id);
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
     public List<Product> getProductListInStock(String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             return productDao.getProductListForComboBox();
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
     public int getTotalCountOfProduct(String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             return productDao.getTotalCountOfProduct();
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     private String renameProduct(String productName) {

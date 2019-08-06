@@ -34,10 +34,10 @@ public class OrderServiceImpl implements OrderService {
             OrdersDTO ordersDTO=new OrdersDTO();
             ordersDTO.setCount(orderDao.getTotalCountOfOrder());
             ordersDTO.setOrders(orderList);
-            if (orderList.isEmpty()) throw new ResourceNotFoundException("No products found.");
             return ordersDTO;
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
@@ -48,8 +48,9 @@ public class OrderServiceImpl implements OrderService {
                 return orderDao.getOrder(id);
             }
             return null;
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
@@ -64,8 +65,9 @@ public class OrderServiceImpl implements OrderService {
                 order.setTotalDiscount(new BigDecimal("0"));
             }
             return order;
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
@@ -76,8 +78,9 @@ public class OrderServiceImpl implements OrderService {
             } else throw new PermissionDeniedException("You don't have permission for this action.");
         }  else if (userService.getUserRole(username).getCode()>=1) {
             return orderDao.searchOrderById(id, false);
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
@@ -87,8 +90,9 @@ public class OrderServiceImpl implements OrderService {
                 orderDao.deleteOrderByTransactionId(transactionId);
                 return true;
             } else throw new ResourceNotFoundException("Order not found.Id=" + transactionId);
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
@@ -96,15 +100,17 @@ public class OrderServiceImpl implements OrderService {
         if (userService.getUserRole(username).getCode()>=1) {
             orderDao.updateOrder(newOrder, orderId);
             return orderDao.getOrder(orderId);
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 
     @Override
     public int getTotalCountOfOrder(String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             return orderDao.getTotalCountOfOrder();
+        } else {
+            throw new PermissionDeniedException("You don't have permission for this action.");
         }
-        throw new PermissionDeniedException("You don't have permission for this action.");
     }
 }

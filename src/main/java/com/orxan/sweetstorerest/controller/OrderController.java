@@ -46,7 +46,7 @@ public class OrderController {
     @GetMapping("/count")
     public ResponseEntity<ResponseObject> getTotalCountofOrder(@RequestParam String username) {
         int count=orderService.getTotalCountOfOrder(username);
-        ResponseObject responseObject=new ResponseObject("success",count);
+        ResponseObject responseObject=new ResponseObject<>("success",count);
         return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
