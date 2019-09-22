@@ -42,6 +42,7 @@ public class ProductController {
     }
 
     @GetMapping("/count")
+
     public ResponseEntity<ResponseObject> getTotalCount(@RequestParam String username){
        int count= productService.getTotalCountOfProduct(username);
        ResponseObject<Integer> responseObject=new ResponseObject<>("success",count);
