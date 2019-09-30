@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
+import com.orxan.sweetstorerest.aop.LoggerAnnotation;
 import com.orxan.sweetstorerest.dtos.ProductsDTO;
 import com.orxan.sweetstorerest.exceptions.InvalidProductException;
 import com.orxan.sweetstorerest.exceptions.PermissionDeniedException;
@@ -39,6 +40,7 @@ public class ProductServiceImpl implements ProductService {
     private String maxPrice;
 
     @Override
+    @LoggerAnnotation
     public ProductsDTO getProductList(int pageIndex, int rowsPerPage,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             int totalCount= productDao.getTotalCountOfProduct();
@@ -55,6 +57,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public Product addProduct(Product product,String username) {
        if(userService.getUserRole(username).getCode()>=1) {
            List<String> errorList= isProductValid(product);
@@ -76,6 +79,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public Product updateProduct(Product product, int oldProductId,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             if (productDao.isProductExist(oldProductId)) {
@@ -131,6 +135,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public boolean deleteProductByID(int id,String username) {
         if (userService.getUserRole(username).getCode()>1) {
             boolean exist = productDao.isProductExist(id);
@@ -144,6 +149,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public Product getProductById(int id,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             Product product = productDao.getProductById(id);
@@ -156,6 +162,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public List<Product> getProductListInStock(String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             return productDao.getProductListForComboBox();
@@ -165,6 +172,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public int getTotalCountOfProduct(String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             return productDao.getTotalCountOfProduct();

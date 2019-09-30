@@ -26,4 +26,12 @@ public class ProductsDTO {
     public void setProducts(List<Product> products) {
         this.products = products;
     }
+
+    @Override
+    public String toString() {
+        return "ProductsDTO{" +
+                "count=" + count +
+                ", products=" + products +
+                '}';
+    }
 }
