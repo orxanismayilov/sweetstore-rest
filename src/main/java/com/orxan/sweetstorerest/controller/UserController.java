@@ -18,10 +18,10 @@ public class UserController {
     @Autowired
     private UserServiceImpl userService;
 
-    @PostMapping("/login")
+   /* @PostMapping("/login")
     public ResponseEntity<ResponseObject> login(@RequestBody User user) {
         ResponseObject<User> responseObject=new ResponseObject<>();
         responseObject.setData(userService.validateLogin(user));
         return new ResponseEntity<>(responseObject,HttpStatus.OK);
-    }
+    }*/
 }
