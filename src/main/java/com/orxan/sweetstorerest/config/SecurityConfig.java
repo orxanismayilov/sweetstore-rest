@@ -26,11 +26,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authoritiesByUsernameQuery("select name,role from Users where name=?")
                 .passwordEncoder(new StandardPasswordEncoder());
     }
-
+/*
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-       /* http.authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers(HttpMethod.DELETE,"/**").hasRole("ADMIN")
-                .and().formLogin();*/
-    }
+                .and().formLogin();
+    }*/
 }
