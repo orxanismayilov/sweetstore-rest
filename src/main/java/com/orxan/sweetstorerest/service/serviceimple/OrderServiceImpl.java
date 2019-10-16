@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
+import com.orxan.sweetstorerest.aop.LoggerAnnotation;
 import com.orxan.sweetstorerest.dtos.OrdersDTO;
 import com.orxan.sweetstorerest.exceptions.PermissionDeniedException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
@@ -25,6 +26,7 @@ public class OrderServiceImpl implements OrderService {
     private UserService userService;
 
     @Override
+    @LoggerAnnotation
     public OrdersDTO getOrderList(int pageIndex, int rowsPerPage,String username) {
         if (userService.getUserRole(username).getCode()>=1){
             int totalCount=orderDao.getTotalCountOfOrder();
@@ -41,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @LoggerAnnotation
     public Order addOrder(Order order, String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             int id = orderDao.addOrder(order);
@@ -54,6 +57,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @LoggerAnnotation
     public Order getOrder(int id,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             Order order = orderDao.getOrder(id);
@@ -71,6 +75,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @LoggerAnnotation
     public List<Order> searchOrderById(String id, boolean searchAll,String username) {
         if (searchAll) {
             if (userService.getUserRole(username).getCode()>1) {
@@ -84,6 +89,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @LoggerAnnotation
     public boolean deleteOrderByTransactionId(int transactionId,String username) {
         if (userService.getUserRole(username).getCode()>1) {
             if (orderDao.isOrderExists(transactionId)) {
@@ -96,6 +102,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @LoggerAnnotation
     public Order updateOrderById(Order newOrder, int orderId,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             orderDao.updateOrder(newOrder, orderId);
@@ -106,6 +113,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @LoggerAnnotation
     public int getTotalCountOfOrder(String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             return orderDao.getTotalCountOfOrder();
