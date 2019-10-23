@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @LoggerAnnotation
+    //@LoggerAnnotation
     public UserRole getUserRole(String username) {
         if (userDao.getUserRole(username)==null) throw new ResourceNotFoundException("user not found");
         return userDao.getUserRole(username);
