@@ -8,7 +8,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
-@Primary
 @Configuration
 @ComponentScan("com.orxan.sweetstorerest")
 @PropertySource("classpath:properties/db.properties")
