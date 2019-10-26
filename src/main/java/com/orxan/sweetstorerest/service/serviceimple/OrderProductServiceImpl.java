@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
+import com.orxan.sweetstorerest.aop.LoggerAnnotation;
 import com.orxan.sweetstorerest.dtos.OrderProductsDTO;
 import com.orxan.sweetstorerest.exceptions.InvalidOrderProductException;
 import com.orxan.sweetstorerest.exceptions.PermissionDeniedException;
@@ -36,7 +37,9 @@ public class OrderProductServiceImpl implements OrderProductService {
     private String negativeTotalPrice;
     @Value("${error.orderProduct.negativeDiscount}")
     private String negativeDiscount;
+
     @Override
+    @LoggerAnnotation
     public OrderProduct saveOrderProduct(OrderProduct orderProduct,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             List<String> errorList = validateOrderProduct(orderProduct, username);
@@ -50,6 +53,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public boolean removeOrderProductById(int id,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             if (orderProductDao.isOrderProductExists(id)) {
@@ -62,6 +66,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public OrderProduct getOrderProduct(int id,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             if (orderProductDao == null) throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
@@ -72,6 +77,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public OrderProductsDTO getOrderProductByOrderId(int orderId,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             List<OrderProduct> orderProductList = orderProductDao.getListByOrderId(orderId);
@@ -86,6 +92,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public OrderProduct updateOrderProduct(OrderProduct newOrderProduct, int id,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             List<String> errorList = validateOrderProduct(newOrderProduct, username);
@@ -101,6 +108,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public List<String> validateOrderProduct(OrderProduct orderProduct,String username) {
         List<String> errorList=new ArrayList<>();
         Product product= productService.getProductById(orderProduct.getProductId(),"");
@@ -123,6 +131,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public BigDecimal getTotalDiscount(int orderId,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             return orderProductDao.getTotalDiscount(orderId);

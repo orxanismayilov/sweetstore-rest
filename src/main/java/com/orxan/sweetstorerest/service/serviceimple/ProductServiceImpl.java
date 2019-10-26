@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
+import com.orxan.sweetstorerest.aop.LoggerAnnotation;
 import com.orxan.sweetstorerest.dtos.ProductsDTO;
 import com.orxan.sweetstorerest.exceptions.InvalidProductException;
 import com.orxan.sweetstorerest.exceptions.PermissionDeniedException;
@@ -8,6 +9,8 @@ import com.orxan.sweetstorerest.model.Product;
 import com.orxan.sweetstorerest.repository.daoimpl.ProductDaoImpl;
 import com.orxan.sweetstorerest.service.ProductService;
 import com.orxan.sweetstorerest.util.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductDaoImpl productDao;
     @Autowired
     private UserServiceImpl userService;
+
+    private final Logger logger= LoggerFactory.getLogger(this.getClass());
 
     @Value("${error.product.nameSize}")
     private String nameSize;
@@ -39,22 +44,39 @@ public class ProductServiceImpl implements ProductService {
     private String maxPrice;
 
     @Override
+    //@LoggerAnnotation
     public ProductsDTO getProductList(int pageIndex, int rowsPerPage,String username) {
+        long startTime=System.currentTimeMillis();
+
         if (userService.getUserRole(username).getCode()>=1) {
+            long usertime=System.currentTimeMillis();
+            long diff=usertime-startTime;
+           logger.info("time difference :" +diff);
             int totalCount= productDao.getTotalCountOfProduct();
+            long time=System.currentTimeMillis();
+            diff=time-usertime;
+            logger.info("total count diff :" +diff);
             int fromIndex=pageIndex*rowsPerPage;
             int toIndex=Math.min(fromIndex+rowsPerPage,totalCount);
             ProductsDTO productsDTO=new ProductsDTO();
             List<Product> productList=productDao.getProductList(fromIndex,toIndex);
+            long prList=System.currentTimeMillis();
+             diff=prList-time;
+            logger.info("time difference prList :" +diff);
             productsDTO.setProducts(productList);
-            productsDTO.setCount(productDao.getTotalCountOfProduct());
+            productsDTO.setCount(totalCount);
+            long finalTime=System.currentTimeMillis();
+            diff=finalTime-startTime;
+            logger.info("result :" +diff);
             return productsDTO;
         } else {
             throw new PermissionDeniedException("You don't have permission for this action.");
         }
+
     }
 
     @Override
+    @LoggerAnnotation
     public Product addProduct(Product product,String username) {
        if(userService.getUserRole(username).getCode()>=1) {
            List<String> errorList= isProductValid(product);
@@ -76,6 +98,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public Product updateProduct(Product product, int oldProductId,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             if (productDao.isProductExist(oldProductId)) {
@@ -131,6 +154,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public boolean deleteProductByID(int id,String username) {
         if (userService.getUserRole(username).getCode()>1) {
             boolean exist = productDao.isProductExist(id);
@@ -144,6 +168,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public Product getProductById(int id,String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             Product product = productDao.getProductById(id);
@@ -156,6 +181,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public List<Product> getProductListInStock(String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             return productDao.getProductListForComboBox();
@@ -165,6 +191,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @LoggerAnnotation
     public int getTotalCountOfProduct(String username) {
         if (userService.getUserRole(username).getCode()>=1) {
             return productDao.getTotalCountOfProduct();

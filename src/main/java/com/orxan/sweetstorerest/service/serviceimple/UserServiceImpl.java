@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
+import com.orxan.sweetstorerest.aop.LoggerAnnotation;
 import com.orxan.sweetstorerest.enums.UserRole;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.User;
@@ -17,6 +18,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @LoggerAnnotation
     public User validateLogin(User user) {
        User u=userDao.validateLogin(user);
        if (u==null) throw new ResourceNotFoundException("User name or password is wrong.");
@@ -24,6 +26,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    //@LoggerAnnotation
     public UserRole getUserRole(String username) {
         if (userDao.getUserRole(username)==null) throw new ResourceNotFoundException("user not found");
         return userDao.getUserRole(username);

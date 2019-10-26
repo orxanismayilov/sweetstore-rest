@@ -109,4 +109,20 @@ public class OrderProduct  {
     public void setActive(boolean active) {
         isActive = active;
     }
+
+    @Override
+    public String toString() {
+        return "OrderProduct{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", productQuantity=" + productQuantity +
+                ", productPrice=" + productPrice +
+                ", totalPrice=" + totalPrice +
+                ", discount=" + discount +
+                ", description='" + description + '\'' +
+                ", isActive=" + isActive +
+                '}';
+    }
 }
