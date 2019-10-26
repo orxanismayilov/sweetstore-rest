@@ -6,22 +6,19 @@ import com.orxan.sweetstorerest.service.serviceimple.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/login")
 public class UserController {
 
     @Autowired
     private UserServiceImpl userService;
 
-   /* @PostMapping("/login")
-    public ResponseEntity<ResponseObject> login(@RequestBody User user) {
-        ResponseObject<User> responseObject=new ResponseObject<>();
-        responseObject.setData(userService.validateLogin(user));
-        return new ResponseEntity<>(responseObject,HttpStatus.OK);
-    }*/
+    @GetMapping
+    public ResponseEntity login(User user) {
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
