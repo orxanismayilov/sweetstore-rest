@@ -1,19 +1,12 @@
-package com.orxan.sweetstorerest.model;
+package com.orxan.sweetstorerest.dtos;
 
-import javax.persistence.*;
-
-@Entity(name = "PRODUCTS")
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class ProductDTO {
     private int id;
     private String name;
     private int quantity;
     private String updateDate;
     private float price;
     private boolean isActive;
-    private int updatedBy;
-
 
     public int getId() {
         return id;
@@ -61,17 +54,5 @@ public class Product {
 
     public void setActive(boolean active) {
         isActive = active;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", quantity=" + quantity +
-                ", updateDate='" + updateDate + '\'' +
-                ", price=" + price +
-                ", isActive=" + isActive +
-                '}';
     }
 }

@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.controller;
 
+import com.orxan.sweetstorerest.dtos.UserDTO;
 import com.orxan.sweetstorerest.model.ResponseObject;
 import com.orxan.sweetstorerest.model.User;
 import com.orxan.sweetstorerest.service.serviceimple.UserServiceImpl;
@@ -17,7 +18,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity login(@RequestBody User user) {
-        ResponseObject<User> responseObject=new ResponseObject<>("",userService.validateLogin(user));
+        ResponseObject<UserDTO> responseObject=new ResponseObject<>("",userService.validateLogin(user));
         return new ResponseEntity(responseObject,HttpStatus.OK);
     }
 }

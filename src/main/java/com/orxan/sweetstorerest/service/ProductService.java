@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.service;
 
+import com.orxan.sweetstorerest.dtos.ProductDTO;
 import com.orxan.sweetstorerest.dtos.ProductsDTO;
 import com.orxan.sweetstorerest.model.Product;
 
@@ -9,7 +10,7 @@ public interface ProductService {
 
     ProductsDTO getProductList(int pageIndex, int rowsPerPage,String username);
 
-    Product addProduct(Product product,String username);
+    ProductDTO addProduct(Product product, String username);
 
     Product updateProduct(Product product, int oldProductId,String username);
 

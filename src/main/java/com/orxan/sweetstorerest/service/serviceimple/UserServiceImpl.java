@@ -1,7 +1,8 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
 import com.orxan.sweetstorerest.aop.LoggerAnnotation;
-import com.orxan.sweetstorerest.entity.UserEntity;
+
+import com.orxan.sweetstorerest.dtos.UserDTO;
 import com.orxan.sweetstorerest.enums.UserRole;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.User;
@@ -26,18 +27,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @LoggerAnnotation
-    public User validateLogin(User user) {
-       UserEntity entity= jparepo.findFirstByName(user.getName());
+    public UserDTO validateLogin(User user) {
+       User entity= jparepo.findFirstByName(user.getName());
         PasswordAuthentication encoder=new PasswordAuthentication();
        if (!encoder.authenticate(user.getPassword(),entity.getPassword())) throw new ResourceNotFoundException("User name or password is wrong.");
        ModelMapper mapper=new ModelMapper();
-       user=mapper.map(entity,User.class);
-       return user;
+       UserDTO userDto=mapper.map(entity,UserDTO.class);
+       return userDto;
     }
 
     @Override
     @LoggerAnnotation
-    public UserRole getUserRole(String username) {
+    public String getUserRole(String username) {
         if (userDao.getUserRole(username)==null) throw new ResourceNotFoundException("user not found");
         return userDao.getUserRole(username);
     }

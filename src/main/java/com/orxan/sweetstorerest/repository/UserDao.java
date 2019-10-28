@@ -13,5 +13,5 @@ public interface UserDao {
 
     User validateLogin(User user);
 
-    UserRole getUserRole(String username);
+    String getUserRole(String username);
 }

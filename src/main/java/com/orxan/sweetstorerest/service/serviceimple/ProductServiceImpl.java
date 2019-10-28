@@ -1,20 +1,25 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
 import com.orxan.sweetstorerest.aop.LoggerAnnotation;
+import com.orxan.sweetstorerest.dtos.ProductDTO;
 import com.orxan.sweetstorerest.dtos.ProductsDTO;
 import com.orxan.sweetstorerest.exceptions.InvalidProductException;
-import com.orxan.sweetstorerest.exceptions.PermissionDeniedException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.Product;
 import com.orxan.sweetstorerest.repository.daoimpl.ProductDaoImpl;
+import com.orxan.sweetstorerest.repository.daoimpl.ProductJpaRepo;
 import com.orxan.sweetstorerest.service.ProductService;
 import com.orxan.sweetstorerest.util.NumberUtils;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +29,11 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductDaoImpl productDao;
     @Autowired
-    private UserServiceImpl userService;
+    private ProductJpaRepo jpaRepo;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    private final Logger logger= LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${error.product.nameSize}")
     private String nameSize;
@@ -45,74 +52,63 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     //@LoggerAnnotation
-    public ProductsDTO getProductList(int pageIndex, int rowsPerPage,String username) {
-        long startTime=System.currentTimeMillis();
+    public ProductsDTO getProductList(int pageIndex, int rowsPerPage, String username) {
+        long startTime = System.currentTimeMillis();
 
-        if (userService.getUserRole(username).getCode()>=1) {
-            long usertime=System.currentTimeMillis();
-            long diff=usertime-startTime;
-           logger.info("time difference :" +diff);
-            int totalCount= productDao.getTotalCountOfProduct();
-            long time=System.currentTimeMillis();
-            diff=time-usertime;
-            logger.info("total count diff :" +diff);
-            int fromIndex=pageIndex*rowsPerPage;
-            int toIndex=Math.min(fromIndex+rowsPerPage,totalCount);
-            ProductsDTO productsDTO=new ProductsDTO();
-            List<Product> productList=productDao.getProductList(fromIndex,toIndex);
-            long prList=System.currentTimeMillis();
-             diff=prList-time;
-            logger.info("time difference prList :" +diff);
-            productsDTO.setProducts(productList);
-            productsDTO.setCount(totalCount);
-            long finalTime=System.currentTimeMillis();
-            diff=finalTime-startTime;
-            logger.info("result :" +diff);
-            return productsDTO;
-        } else {
-            throw new PermissionDeniedException("You don't have permission for this action.");
-        }
-
+        long usertime = System.currentTimeMillis();
+        long diff = usertime - startTime;
+        logger.info("time difference :" + diff);
+        int totalCount = productDao.getTotalCountOfProduct();
+        long time = System.currentTimeMillis();
+        diff = time - usertime;
+        logger.info("total count diff :" + diff);
+        int fromIndex = pageIndex * rowsPerPage;
+        int toIndex = Math.min(fromIndex + rowsPerPage, totalCount);
+        ProductsDTO productsDTO = new ProductsDTO();
+        List<Product> productList = new ArrayList<>();
+        jpaRepo.findAll().forEach(productList::add);
+        long prList = System.currentTimeMillis();
+        diff = prList - time;
+        logger.info("time difference prList :" + diff);
+        productsDTO.setProducts(productList);
+        productsDTO.setCount(totalCount);
+        long finalTime = System.currentTimeMillis();
+        diff = finalTime - startTime;
+        logger.info("result :" + diff);
+        return productsDTO;
     }
 
     @Override
     @LoggerAnnotation
-    public Product addProduct(Product product,String username) {
-       if(userService.getUserRole(username).getCode()>=1) {
-           List<String> errorList= isProductValid(product);
-           if (errorList.isEmpty()) {
-               Product checkProduct=productDao.checkProductNameIsExist(product.getName());
-               if (checkProduct==null) {
-                   return productDao.addProduct(product);
-               } else {
-                   checkProduct.setQuantity(product.getQuantity()+checkProduct.getQuantity());
-                   checkProduct.setPrice(product.getPrice());
-                   productDao.updateProduct(checkProduct,checkProduct.getId());
-               }
-           } else
-               throw new InvalidProductException(errorList);
-           return null;
-       } else {
-           throw new PermissionDeniedException("You don't have permission for this action.");
-       }
-    }
-
-    @Override
-    @LoggerAnnotation
-    public Product updateProduct(Product product, int oldProductId,String username) {
-        if (userService.getUserRole(username).getCode()>=1) {
-            if (productDao.isProductExist(oldProductId)) {
-                List<String> errorList = isProductValid(product);
-                if (errorList.isEmpty()) {
-                    return productDao.updateProduct(product, oldProductId);
-                } else {
-                    throw new InvalidProductException(errorList);
-                }
+    public ProductDTO addProduct(Product product, String username) {
+        List<String> errorList = isProductValid(product);
+        if (errorList.isEmpty()) {
+            Product checkProduct = jpaRepo.findFirstByName(product.getName());
+            if (checkProduct == null) {
+                product.setUpdateDate(LocalDateTime.now().toString());
+                return modelMapper.map(jpaRepo.save(product), ProductDTO.class);
             } else {
-                throw new ResourceNotFoundException("Product not found. Id=" + oldProductId);
+                checkProduct.setQuantity(product.getQuantity() + checkProduct.getQuantity());
+                checkProduct.setPrice(product.getPrice());
+                jpaRepo.save(checkProduct);
+            }
+        } else
+            throw new InvalidProductException(errorList);
+        return null;
+    }
+
+    @Override
+    @LoggerAnnotation
+    public Product updateProduct(Product product, int oldProductId, String username) {
+        if (productDao.isProductExist(oldProductId)) {
+            List<String> errorList = isProductValid(product);
+            if (errorList.isEmpty()) {
+                return productDao.updateProduct(product, oldProductId);
+            } else {
+                throw new InvalidProductException(errorList);
             }
         } else {
-            throw new PermissionDeniedException("You don't have permission for this action.");
+            throw new ResourceNotFoundException("Product not found. Id=" + oldProductId);
         }
     }
 
@@ -155,49 +151,33 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @LoggerAnnotation
-    public boolean deleteProductByID(int id,String username) {
-        if (userService.getUserRole(username).getCode()>1) {
-            boolean exist = productDao.isProductExist(id);
-            if (exist) {
-                productDao.deleteProductById(id);
-                return true;
-            } else throw new ResourceNotFoundException("Product not found. Id=" + id);
-        } else {
-            throw new PermissionDeniedException("You don't have permission for this action.");
-        }
+    public boolean deleteProductByID(int id, String username) {
+        boolean exist = productDao.isProductExist(id);
+        if (exist) {
+            productDao.deleteProductById(id);
+            return true;
+        } else throw new ResourceNotFoundException("Product not found. Id=" + id);
     }
 
     @Override
     @LoggerAnnotation
-    public Product getProductById(int id,String username) {
-        if (userService.getUserRole(username).getCode()>=1) {
-            Product product = productDao.getProductById(id);
-            if (product != null) {
-                return product;
-            } else throw new ResourceNotFoundException("Product not found. id=" + id);
-        } else {
-            throw new PermissionDeniedException("You don't have permission for this action.");
-        }
+    public Product getProductById(int id, String username) {
+        Product product = productDao.getProductById(id);
+        if (product != null) {
+            return product;
+        } else throw new ResourceNotFoundException("Product not found. id=" + id);
     }
 
     @Override
     @LoggerAnnotation
     public List<Product> getProductListInStock(String username) {
-        if (userService.getUserRole(username).getCode()>=1) {
-            return productDao.getProductListForComboBox();
-        } else {
-            throw new PermissionDeniedException("You don't have permission for this action.");
-        }
+        return productDao.getProductListForComboBox();
     }
 
     @Override
     @LoggerAnnotation
     public int getTotalCountOfProduct(String username) {
-        if (userService.getUserRole(username).getCode()>=1) {
-            return productDao.getTotalCountOfProduct();
-        } else {
-            throw new PermissionDeniedException("You don't have permission for this action.");
-        }
+        return productDao.getTotalCountOfProduct();
     }
 
     private String renameProduct(String productName) {

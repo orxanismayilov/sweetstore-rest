@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.controller;
 
+import com.orxan.sweetstorerest.dtos.ProductDTO;
 import com.orxan.sweetstorerest.dtos.ProductsDTO;
 import com.orxan.sweetstorerest.model.Product;
 import com.orxan.sweetstorerest.model.ResponseObject;
@@ -51,8 +52,8 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ResponseObject> addProduct(@RequestBody Product product,@RequestParam String username) {
-       Product productAdded=productService.addProduct(product,username);
-       ResponseObject<Product> responseObject=new ResponseObject<>("success",productAdded);
+       ProductDTO productAdded=productService.addProduct(product,username);
+       ResponseObject<ProductDTO> responseObject=new ResponseObject<>("success",productAdded);
        return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
 

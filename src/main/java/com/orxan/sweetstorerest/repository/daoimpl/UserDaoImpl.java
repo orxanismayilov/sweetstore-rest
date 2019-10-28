@@ -47,7 +47,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public UserRole getUserRole(String username) {
+    public String getUserRole(String username) {
         String sql="SELECT * FROM USERS WHERE name=? AND  is_active=1";
         try {
             User user=(User) jdbcTemplate.queryForObject(sql,new UserMapper(),username);

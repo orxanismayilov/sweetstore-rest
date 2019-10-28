@@ -13,7 +13,6 @@ public class ProductMapper implements RowMapper {
         product.setId(rs.getInt("id"));
         product.setName(rs.getString("name"));
         product.setPrice(rs.getFloat("price"));
-        product.setUpdateDate(rs.getTimestamp("update_date").toString());
         product.setQuantity(rs.getInt("quantity"));
         product.setActive(true);
         return product;

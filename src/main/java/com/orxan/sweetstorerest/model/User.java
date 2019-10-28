@@ -1,21 +1,18 @@
 package com.orxan.sweetstorerest.model;
 
-import com.orxan.sweetstorerest.enums.UserRole;
+import javax.persistence.*;
 
-public class User  {
+
+@Entity(name = "USERS")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     private String password;
-    private UserRole role;
+    private String role;
     private boolean isActive;
 
-    public User() {
-        this.id = 0;
-        this.name = "";
-        this.role=UserRole.USER;
-        this.password = "";
-        this.isActive = true;
-    }
 
     public int getId() {
         return id;
@@ -49,11 +46,11 @@ public class User  {
         isActive = active;
     }
 
-    public UserRole getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(UserRole role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
