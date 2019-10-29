@@ -12,7 +12,7 @@ public interface ProductService {
 
     ProductDTO addProduct(Product product, String username);
 
-    Product updateProduct(Product product, int oldProductId,String username);
+    ProductDTO updateProduct(Product product, int oldProductId,String username);
 
     List<String> isProductValid(Product product);
 

@@ -10,6 +10,7 @@ import com.orxan.sweetstorerest.repository.daoimpl.ProductDaoImpl;
 import com.orxan.sweetstorerest.repository.daoimpl.ProductJpaRepo;
 import com.orxan.sweetstorerest.service.ProductService;
 import com.orxan.sweetstorerest.util.NumberUtils;
+import com.sun.javafx.fxml.PropertyNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.nio.file.ReadOnlyFileSystemException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,30 +51,30 @@ public class ProductServiceImpl implements ProductService {
     private String maxPrice;
 
     @Override
-    //@LoggerAnnotation
+    @LoggerAnnotation
     public ProductsDTO getProductList(int pageIndex, int rowsPerPage, String username) {
         long startTime = System.currentTimeMillis();
 
         long usertime = System.currentTimeMillis();
         long diff = usertime - startTime;
-        logger.info("time difference :" + diff);
+        //logger.info("time difference :" + diff);
         int totalCount = productDao.getTotalCountOfProduct();
         long time = System.currentTimeMillis();
         diff = time - usertime;
-        logger.info("total count diff :" + diff);
+        //logger.info("total count diff :" + diff);
         int fromIndex = pageIndex * rowsPerPage;
         int toIndex = Math.min(fromIndex + rowsPerPage, totalCount);
         ProductsDTO productsDTO = new ProductsDTO();
-        List<Product> productList = new ArrayList<>();
-        jpaRepo.findAll().forEach(productList::add);
+        List<Product> productList =new ArrayList<>();
+        jpaRepo.findByIsActiveTrue().forEach(productList::add);
         long prList = System.currentTimeMillis();
         diff = prList - time;
-        logger.info("time difference prList :" + diff);
+        //logger.info("time difference prList :" + diff);
         productsDTO.setProducts(productList);
         productsDTO.setCount(totalCount);
         long finalTime = System.currentTimeMillis();
         diff = finalTime - startTime;
-        logger.info("result :" + diff);
+        //logger.info("result :" + diff);
         return productsDTO;
     }
 
@@ -90,20 +90,20 @@ public class ProductServiceImpl implements ProductService {
             } else {
                 checkProduct.setQuantity(product.getQuantity() + checkProduct.getQuantity());
                 checkProduct.setPrice(product.getPrice());
-                jpaRepo.save(checkProduct);
+                ProductDTO productDTO=modelMapper.map(jpaRepo.save(checkProduct), ProductDTO.class);;
+                return productDTO;
             }
         } else
             throw new InvalidProductException(errorList);
-        return null;
     }
 
     @Override
     @LoggerAnnotation
-    public Product updateProduct(Product product, int oldProductId, String username) {
-        if (productDao.isProductExist(oldProductId)) {
+    public ProductDTO updateProduct(Product product, int oldProductId, String username) {
+        if (jpaRepo.findById(oldProductId).isPresent()) {
             List<String> errorList = isProductValid(product);
             if (errorList.isEmpty()) {
-                return productDao.updateProduct(product, oldProductId);
+                return modelMapper.map(jpaRepo.save(product),ProductDTO.class);
             } else {
                 throw new InvalidProductException(errorList);
             }
@@ -152,9 +152,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @LoggerAnnotation
     public boolean deleteProductByID(int id, String username) {
-        boolean exist = productDao.isProductExist(id);
-        if (exist) {
-            productDao.deleteProductById(id);
+        if (jpaRepo.findById(id).isPresent()) {
+            jpaRepo.deleteById(id);
             return true;
         } else throw new ResourceNotFoundException("Product not found. Id=" + id);
     }
@@ -162,17 +161,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @LoggerAnnotation
     public Product getProductById(int id, String username) {
-        Product product = productDao.getProductById(id);
-        if (product != null) {
-            return product;
-        } else throw new ResourceNotFoundException("Product not found. id=" + id);
+        return jpaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found. Id="+String.valueOf(id)));
     }
 
     @Override
     @LoggerAnnotation
     public List<Product> getProductListInStock(String username) {
-        return productDao.getProductListForComboBox();
-    }
+        List<Product> productList=new ArrayList<>();
+        jpaRepo.findByQuantityGreaterThanAndIsActiveTrue(0).forEach(productList::add);
+        return productList;
+}
 
     @Override
     @LoggerAnnotation

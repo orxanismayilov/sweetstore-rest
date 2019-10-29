@@ -66,8 +66,8 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseObject> updateProduct(@RequestBody Product product,@PathVariable int id,@RequestParam String username) {
-        Product newProduct=productService.updateProduct(product,id,username);
-        ResponseObject<Product> responseObject=new ResponseObject<>("success",newProduct);
+        ProductDTO newProduct=productService.updateProduct(product,id,username);
+        ResponseObject<ProductDTO> responseObject=new ResponseObject<>("success",newProduct);
         return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
 

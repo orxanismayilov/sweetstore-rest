@@ -21,10 +21,8 @@ public class LoggerAOP {
 
     private final Logger logger= LoggerFactory.getLogger(this.getClass());
 
-    @Pointcut("within(com.orxan.sweetstorerest..*)")
-    public void springBeanPointCut(){}
 
-    @Around("@annotation(LoggerAnnotation)")
+    @Around("execution(public * *(..)) &&@annotation(LoggerAnnotation)")
     public Object aroundAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
         StringBuilder logString=new StringBuilder();
         List<String> paramNames;
@@ -79,10 +77,5 @@ public class LoggerAOP {
         logString.append(",params:[").append(params).append("]");
         logger.info(String.valueOf(logString));
 
-    }
-
-    @AfterThrowing(pointcut = "springBeanPointCut()",throwing = "e")
-    public void logAfterThrowing(Exception e) {
-        logger.error(e.getMessage());
     }
 }
