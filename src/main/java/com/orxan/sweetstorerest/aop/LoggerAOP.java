@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@Configuration
 @Aspect
 public class LoggerAOP {
 
@@ -53,8 +52,8 @@ public class LoggerAOP {
             }
             printLogAction(logString,params);
         } catch (Exception e) {}
+        Object returned=joinPoint.proceed();
         try {
-            Object returned=joinPoint.proceed();
             StringBuilder params=new StringBuilder();
             if(returned != null){
                 String returnedStr = returned.toString();
@@ -70,7 +69,7 @@ public class LoggerAOP {
             logger.error("Exception occurred while intercepting method " + joinPoint.getSignature().getName(), e);
         }
 
-        return joinPoint.proceed();
+        return returned;
     }
 
     private void printLogAction(StringBuilder logString,StringBuilder params){
