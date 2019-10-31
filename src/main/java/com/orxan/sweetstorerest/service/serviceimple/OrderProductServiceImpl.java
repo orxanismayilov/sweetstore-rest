@@ -2,12 +2,14 @@ package com.orxan.sweetstorerest.service.serviceimple;
 
 import com.orxan.sweetstorerest.aop.LoggerAnnotation;
 import com.orxan.sweetstorerest.dtos.OrderProductsDTO;
+import com.orxan.sweetstorerest.dtos.ProductDTO;
 import com.orxan.sweetstorerest.exceptions.InvalidOrderProductException;
 import com.orxan.sweetstorerest.exceptions.PermissionDeniedException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.OrderProduct;
 import com.orxan.sweetstorerest.model.OrderProductSummary;
 import com.orxan.sweetstorerest.model.Product;
+import com.orxan.sweetstorerest.repository.OrderJpaRepo;
 import com.orxan.sweetstorerest.repository.daoimpl.OrderProductDaoImpl;
 import com.orxan.sweetstorerest.service.OrderProductService;
 import com.orxan.sweetstorerest.service.ProductService;
@@ -27,7 +29,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Autowired
     private ProductService productService;
     @Autowired
-    private UserServiceImpl userService;
+    private OrderJpaRepo repo;
 
     @Value("${error.product.negativeQuantity}")
     private String negativeQuantity;
@@ -91,7 +93,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     @LoggerAnnotation
     public List<String> validateOrderProduct(OrderProduct orderProduct,String username) {
         List<String> errorList=new ArrayList<>();
-        Product product= productService.getProductById(orderProduct.getProductId(),"");
+        ProductDTO product= productService.getProductById(orderProduct.getProductId(),"");
 
         if (product != null) {
             if (orderProduct.getProductQuantity() <= 0) {

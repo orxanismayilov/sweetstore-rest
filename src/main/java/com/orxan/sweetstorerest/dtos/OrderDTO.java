@@ -1,31 +1,18 @@
-package com.orxan.sweetstorerest.model;
+package com.orxan.sweetstorerest.dtos;
 
-import javax.persistence.*;
+
 import java.math.BigDecimal;
 
-@Entity(name = "ORDER_DETAILS")
-public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+public class OrderDTO {
     private int transactionID;
-    @Column(name = "customer_name")
     private String customerName;
-    @Column(name = "customer_address")
     private String customerAddress;
-    @Column(name = "description")
     private String description;
-    @Column(name = "order_type")
     private String orderType;
-    @Column(name = "price_total")
     private BigDecimal totalPrice;
-    @Column(name = "total_discount")
     private BigDecimal totalDiscount;
-    @Column(name = "insert_date")
     private String date;
-    @Column(name = "order_status")
     private String orderStatus;
-    @Column(name = "is_active")
     private boolean isActive;
 
     public String getCustomerName() {
@@ -124,3 +111,4 @@ public class Order {
                 '}';
     }
 }
+

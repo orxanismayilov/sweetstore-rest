@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.service;
 
+import com.orxan.sweetstorerest.dtos.OrderDTO;
 import com.orxan.sweetstorerest.dtos.OrdersDTO;
 import com.orxan.sweetstorerest.model.Order;
 
@@ -13,7 +14,7 @@ public interface OrderService {
 
     List<Order> searchOrderById(String id, boolean searchAll,String username);
 
-    Order getOrder(int id,String username);
+    OrderDTO getOrder(int id, String username);
 
     boolean deleteOrderByTransactionId(int transactionId,String username);
 

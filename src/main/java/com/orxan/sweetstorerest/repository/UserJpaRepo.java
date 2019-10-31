@@ -1,4 +1,4 @@
-package com.orxan.sweetstorerest.repository.daoimpl;
+package com.orxan.sweetstorerest.repository;
 
 
 

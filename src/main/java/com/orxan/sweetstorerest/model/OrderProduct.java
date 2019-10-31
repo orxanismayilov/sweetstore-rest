@@ -14,21 +14,7 @@ public class OrderProduct  {
     private String description;
     private boolean isActive;
 
-    public OrderProduct()   {
-    }
 
-    public OrderProduct(int id, int orderId, int productId, String productName, int productQuantity, float productPrice, BigDecimal totalPrice, float discount, String description, boolean isActive) {
-        this.id = id;
-        this.orderId = orderId;
-        this.productId = productId;
-        this.productName = productName;
-        this.productQuantity = productQuantity;
-        this.productPrice = productPrice;
-        this.totalPrice = totalPrice;
-        this.discount = discount;
-        this.description = description;
-        this.isActive = isActive;
-    }
 
     public int getId() {
         return id;

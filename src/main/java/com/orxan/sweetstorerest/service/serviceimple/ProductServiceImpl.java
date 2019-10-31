@@ -7,10 +7,9 @@ import com.orxan.sweetstorerest.exceptions.InvalidProductException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.Product;
 import com.orxan.sweetstorerest.repository.daoimpl.ProductDaoImpl;
-import com.orxan.sweetstorerest.repository.daoimpl.ProductJpaRepo;
+import com.orxan.sweetstorerest.repository.ProductJpaRepo;
 import com.orxan.sweetstorerest.service.ProductService;
 import com.orxan.sweetstorerest.util.NumberUtils;
-import com.sun.javafx.fxml.PropertyNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.ReadOnlyFileSystemException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
         long usertime = System.currentTimeMillis();
         long diff = usertime - startTime;
         //logger.info("time difference :" + diff);
-        int totalCount = productDao.getTotalCountOfProduct();
+        int totalCount = getTotalCountOfProduct(username);
         long time = System.currentTimeMillis();
         diff = time - usertime;
         //logger.info("total count diff :" + diff);
@@ -160,8 +158,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @LoggerAnnotation
-    public Product getProductById(int id, String username) {
-        return jpaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found. Id="+String.valueOf(id)));
+    public ProductDTO getProductById(int id, String username) {
+        return modelMapper.map(jpaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found. Id="+String.valueOf(id))),ProductDTO.class);
     }
 
     @Override
@@ -175,7 +173,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @LoggerAnnotation
     public int getTotalCountOfProduct(String username) {
-        return productDao.getTotalCountOfProduct();
+        return jpaRepo.countByIsActiveTrue();
     }
 
     private String renameProduct(String productName) {

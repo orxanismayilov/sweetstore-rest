@@ -37,8 +37,8 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getProduct(@PathVariable int id,@RequestParam String username) {
-       Product product=productService.getProductById(id,username);
-       ResponseObject<Product> responseObject= new ResponseObject<>("success", product);
+       ProductDTO product=productService.getProductById(id,username);
+       ResponseObject<ProductDTO> responseObject= new ResponseObject<>("success", product);
        return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 

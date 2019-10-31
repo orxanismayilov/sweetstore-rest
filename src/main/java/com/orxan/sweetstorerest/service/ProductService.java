@@ -18,7 +18,7 @@ public interface ProductService {
 
     boolean deleteProductByID(int id,String username);
 
-    Product getProductById(int id,String username);
+    ProductDTO getProductById(int id,String username);
 
     List<Product> getProductListInStock(String username);
 

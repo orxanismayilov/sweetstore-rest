@@ -1,6 +1,7 @@
 package com.orxan.sweetstorerest.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity(name = "PRODUCTS")
 public class Product {
@@ -13,7 +14,6 @@ public class Product {
     private float price;
     private boolean isActive;
     private int updatedBy;
-
 
     public int getId() {
         return id;

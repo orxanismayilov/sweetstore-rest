@@ -3,11 +3,10 @@ package com.orxan.sweetstorerest.service.serviceimple;
 import com.orxan.sweetstorerest.aop.LoggerAnnotation;
 
 import com.orxan.sweetstorerest.dtos.UserDTO;
-import com.orxan.sweetstorerest.enums.UserRole;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.User;
 import com.orxan.sweetstorerest.repository.daoimpl.UserDaoImpl;
-import com.orxan.sweetstorerest.repository.daoimpl.UserJpaRepo;
+import com.orxan.sweetstorerest.repository.UserJpaRepo;
 import com.orxan.sweetstorerest.service.UserService;
 import com.orxan.sweetstorerest.util.PasswordAuthentication;
 import org.modelmapper.ModelMapper;
