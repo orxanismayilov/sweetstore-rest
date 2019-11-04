@@ -1,8 +1,6 @@
 package com.orxan.sweetstorerest.mappers;
 
 
-import com.orxan.sweetstorerest.enums.OrderStatus;
-import com.orxan.sweetstorerest.enums.OrderType;
 import com.orxan.sweetstorerest.model.Order;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -14,7 +12,7 @@ public class OrderMapper implements RowMapper {
     @Override
     public Order mapRow(ResultSet resultSet, int i) throws SQLException {
         Order order = new Order();
-        order.setTransactionID(resultSet.getInt("id"));
+        order.setId(resultSet.getInt("id"));
         order.setCustomerName(resultSet.getString("customer_name"));
         order.setCustomerAddress(resultSet.getString("customer_address"));
         order.setDescription(resultSet.getString("description"));

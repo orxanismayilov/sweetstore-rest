@@ -1,5 +1,7 @@
 package com.orxan.sweetstorerest.model;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 
 public class OrderProduct  {
@@ -13,8 +15,9 @@ public class OrderProduct  {
     private float discount;
     private String description;
     private boolean isActive;
-
-
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     public int getId() {
         return id;

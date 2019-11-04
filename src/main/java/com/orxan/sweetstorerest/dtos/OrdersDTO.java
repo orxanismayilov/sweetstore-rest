@@ -1,12 +1,10 @@
 package com.orxan.sweetstorerest.dtos;
 
-import com.orxan.sweetstorerest.model.Order;
-
 import java.util.List;
 
 public class OrdersDTO {
     private int count;
-    private List<Order> orders;
+    private List<OrderDTO> orders;
 
     public OrdersDTO() {
     }
@@ -19,11 +17,11 @@ public class OrdersDTO {
         this.count = count;
     }
 
-    public List<Order> getOrders() {
+    public List<OrderDTO> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<Order> orders) {
+    public void setOrders(List<OrderDTO> orders) {
         this.orders = orders;
     }
 }

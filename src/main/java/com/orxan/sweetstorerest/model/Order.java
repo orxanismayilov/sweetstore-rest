@@ -2,13 +2,14 @@ package com.orxan.sweetstorerest.model;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity(name = "ORDER_DETAILS")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private int transactionID;
+    private int id;
     @Column(name = "customer_name")
     private String customerName;
     @Column(name = "customer_address")
@@ -27,7 +28,8 @@ public class Order {
     private String orderStatus;
     @Column(name = "is_active")
     private boolean isActive;
-
+    @OneToMany(mappedBy = "orderProduct")
+    private List<OrderProduct> orderProducts;
     public String getCustomerName() {
         return customerName;
     }
@@ -60,12 +62,12 @@ public class Order {
         this.orderType = orderType;
     }
 
-    public int getTransactionID() {
-        return transactionID;
+    public int getId() {
+        return id;
     }
 
-    public void setTransactionID(int transactionID) {
-        this.transactionID = transactionID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public BigDecimal getTotalPrice() {
@@ -115,7 +117,7 @@ public class Order {
                 ", customerAddress='" + customerAddress + '\'' +
                 ", description='" + description + '\'' +
                 ", orderType=" + orderType +
-                ", transactionID=" + transactionID +
+                ", id=" + id +
                 ", totalPrice=" + totalPrice +
                 ", totalDiscount=" + totalDiscount +
                 ", date='" + date + '\'' +

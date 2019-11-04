@@ -12,7 +12,7 @@ public interface OrderService {
 
     Order addOrder(Order order, String username);
 
-    List<Order> searchOrderById(String id, boolean searchAll,String username);
+    List<Order> searchOrderById(int id, boolean searchAll,String username);
 
     OrderDTO getOrder(int id, String username);
 

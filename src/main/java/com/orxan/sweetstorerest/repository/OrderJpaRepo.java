@@ -15,4 +15,6 @@ public interface OrderJpaRepo extends CrudRepository<Order,Integer>{
     List<Order> findByIsActiveTrue();
 
     Optional<Order> findByIdAndIsActiveTrue(int id);
+
+    List<Order> findByIdLikeAndIsActiveTrue(int id);
 }

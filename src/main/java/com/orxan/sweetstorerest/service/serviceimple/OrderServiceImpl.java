@@ -3,19 +3,17 @@ package com.orxan.sweetstorerest.service.serviceimple;
 import com.orxan.sweetstorerest.aop.LoggerAnnotation;
 import com.orxan.sweetstorerest.dtos.OrderDTO;
 import com.orxan.sweetstorerest.dtos.OrdersDTO;
-import com.orxan.sweetstorerest.exceptions.PermissionDeniedException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.Order;
 import com.orxan.sweetstorerest.repository.OrderJpaRepo;
 import com.orxan.sweetstorerest.repository.daoimpl.OrderDaoImpl;
 import com.orxan.sweetstorerest.service.OrderProductService;
 import com.orxan.sweetstorerest.service.OrderService;
-import com.orxan.sweetstorerest.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,8 +36,11 @@ public class OrderServiceImpl implements OrderService {
             int fromIndex=pageIndex*rowsPerPage;
             int toIndex=Math.min(fromIndex+rowsPerPage,totalCount);
             OrdersDTO ordersDTO=new OrdersDTO();
+            ordersDTO.setOrders(new ArrayList<>());
             ordersDTO.setCount(repo.countByIsActiveTrue());
-            ordersDTO.setOrders(repo.findByIsActiveTrue());
+            for (Order order:repo.findByIsActiveTrue()) {
+                ordersDTO.getOrders().add(modelMapper.map(order,OrderDTO.class));
+            }
             return ordersDTO;
     }
 
@@ -57,10 +58,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @LoggerAnnotation
-    public List<Order> searchOrderById(String id, boolean searchAll,String username) {
-        if (searchAll) {
-                return orderDao.searchOrderById(id, true);
-            } else throw new PermissionDeniedException("You don't have permission for this action.");
+    public List<Order> searchOrderById(int id, boolean searchAll,String username) {
+        return repo.findByIdLikeAndIsActiveTrue(id);
     }
 
     @Override

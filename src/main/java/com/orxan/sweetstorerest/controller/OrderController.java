@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.controller;
 
+import com.orxan.sweetstorerest.dtos.OrderDTO;
 import com.orxan.sweetstorerest.dtos.OrdersDTO;
 import com.orxan.sweetstorerest.model.Order;
 import com.orxan.sweetstorerest.model.ResponseObject;
@@ -27,14 +28,14 @@ public class OrderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getOrder(@PathVariable  int id,@RequestParam String username) {
-        Order order= orderService.getOrder(id,username);
-        ResponseObject<Order> responseObject=new ResponseObject<>("success",order);
+        OrderDTO order= orderService.getOrder(id,username);
+        ResponseObject<OrderDTO> responseObject=new ResponseObject<>("success",order);
         return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
 
     @GetMapping("/search")
-    public ResponseEntity<ResponseObject> findOrderById(@RequestParam String id,
+    public ResponseEntity<ResponseObject> findOrderById(@RequestParam int id,
                                                         @RequestParam(value="getAll",defaultValue = "false")
                                                                 boolean getAll,
                                                         @RequestParam String username) {

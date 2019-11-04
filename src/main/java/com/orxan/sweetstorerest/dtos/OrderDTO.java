@@ -4,7 +4,7 @@ package com.orxan.sweetstorerest.dtos;
 import java.math.BigDecimal;
 
 public class OrderDTO {
-    private int transactionID;
+    private int id;
     private String customerName;
     private String customerAddress;
     private String description;
@@ -47,12 +47,12 @@ public class OrderDTO {
         this.orderType = orderType;
     }
 
-    public int getTransactionID() {
-        return transactionID;
+    public int getId() {
+        return id;
     }
 
-    public void setTransactionID(int transactionID) {
-        this.transactionID = transactionID;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public BigDecimal getTotalPrice() {
@@ -102,7 +102,7 @@ public class OrderDTO {
                 ", customerAddress='" + customerAddress + '\'' +
                 ", description='" + description + '\'' +
                 ", orderType=" + orderType +
-                ", transactionID=" + transactionID +
+                ", id=" + id +
                 ", totalPrice=" + totalPrice +
                 ", totalDiscount=" + totalDiscount +
                 ", date='" + date + '\'' +
