@@ -1,22 +1,21 @@
 package com.orxan.sweetstorerest.dtos;
 
-import com.orxan.sweetstorerest.model.OrderProduct;
 import com.orxan.sweetstorerest.model.OrderProductSummary;
 
 import java.util.List;
 
 public class OrderProductsDTO {
-    private List<OrderProduct> orderProducts;
+    private List<OrderProductDTO> orderProducts;
     private OrderProductSummary summary;
 
     public OrderProductsDTO() {
     }
 
-    public List<OrderProduct> getOrderProducts() {
+    public List<OrderProductDTO> getOrderProducts() {
         return orderProducts;
     }
 
-    public void setOrderProducts(List<OrderProduct> orderProducts) {
+    public void setOrderProducts(List<OrderProductDTO> orderProducts) {
         this.orderProducts = orderProducts;
     }
 

@@ -1,18 +1,20 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
 import com.orxan.sweetstorerest.aop.LoggerAnnotation;
+import com.orxan.sweetstorerest.dtos.OrderDTO;
+import com.orxan.sweetstorerest.dtos.OrderProductDTO;
 import com.orxan.sweetstorerest.dtos.OrderProductsDTO;
 import com.orxan.sweetstorerest.dtos.ProductDTO;
 import com.orxan.sweetstorerest.exceptions.InvalidOrderProductException;
-import com.orxan.sweetstorerest.exceptions.PermissionDeniedException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.OrderProduct;
 import com.orxan.sweetstorerest.model.OrderProductSummary;
-import com.orxan.sweetstorerest.model.Product;
-import com.orxan.sweetstorerest.repository.OrderJpaRepo;
 import com.orxan.sweetstorerest.repository.daoimpl.OrderProductDaoImpl;
+import com.orxan.sweetstorerest.repository.daoimpl.OrderProductJpaRepo;
 import com.orxan.sweetstorerest.service.OrderProductService;
 import com.orxan.sweetstorerest.service.ProductService;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,9 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Autowired
     private ProductService productService;
     @Autowired
-    private OrderJpaRepo repo;
+    private OrderProductJpaRepo repo;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Value("${error.product.negativeQuantity}")
     private String negativeQuantity;
@@ -45,8 +49,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     public OrderProduct saveOrderProduct(OrderProduct orderProduct,String username) {
             List<String> errorList = validateOrderProduct(orderProduct, username);
             if (errorList.isEmpty()) {
-                int i = orderProductDao.saveOrderProduct(orderProduct);
-                return orderProductDao.getOrderProduct(i);
+                return repo.save(orderProduct);
             } else throw new InvalidOrderProductException(errorList);
     }
 
@@ -61,20 +64,31 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     @LoggerAnnotation
-    public OrderProduct getOrderProduct(int id,String username) {
-            if (orderProductDao == null) throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
-            return orderProductDao.getOrderProduct(id);
+    public OrderProductDTO getOrderProduct(int id,String username) {
+        modelMapper.getConfiguration().setAmbiguityIgnored(true);
+        return modelMapper.map(repo.findByIdAndIsActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("OrderProduct not found="+id)),OrderProductDTO.class);
     }
 
     @Override
     @LoggerAnnotation
-    public OrderProductsDTO getOrderProductByOrderId(int orderId,String username) {
-            List<OrderProduct> orderProductList = orderProductDao.getListByOrderId(orderId);
-            OrderProductSummary summary = orderProductDao.getOrderProductSummary(orderId);
-            OrderProductsDTO dto = new OrderProductsDTO();
-            dto.setSummary(summary);
-            dto.setOrderProducts(orderProductList);
-            return dto;
+    public OrderProductsDTO getOrderProductByOrderId(int orderId, String username) {
+        // TO DO: custom model mapper
+
+        modelMapper.getConfiguration().setAmbiguityIgnored(true);
+        List<OrderProductDTO> orderProductList = new ArrayList<>();
+        for (OrderProduct orderProduct : repo.findByOrderId(orderId)) {
+            PropertyMap<OrderProduct, OrderProductDTO> propertyMap = new PropertyMap<OrderProduct, OrderProductDTO>() {
+                protected void configure() {
+                    map().setProductName(source.getProduct().getName());
+                }
+            };
+            modelMapper.map(orderProduct, OrderProductDTO.class);
+        }
+        OrderProductSummary summary = orderProductDao.getOrderProductSummary(orderId);
+        OrderProductsDTO dto = new OrderProductsDTO();
+        dto.setSummary(summary);
+        dto.setOrderProducts(orderProductList);
+        return dto;
     }
 
     @Override

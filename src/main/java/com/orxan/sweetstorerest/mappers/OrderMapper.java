@@ -18,7 +18,6 @@ public class OrderMapper implements RowMapper {
         order.setDescription(resultSet.getString("description"));
         order.setOrderType(resultSet.getString("order_type"));
         order.setTotalPrice(resultSet.getBigDecimal("price_total"));
-        order.setDate(resultSet.getTimestamp("insert_date").toString());
         order.setOrderStatus(resultSet.getString("order_status"));
         order.setActive(resultSet.getBoolean("is_active"));
         return order;

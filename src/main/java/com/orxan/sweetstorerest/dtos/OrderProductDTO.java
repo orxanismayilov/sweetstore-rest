@@ -1,31 +1,18 @@
-package com.orxan.sweetstorerest.model;
+package com.orxan.sweetstorerest.dtos;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Entity(name = "ORDER_PRODUCT")
-public class OrderProduct  {
-    @Id
+public class OrderProductDTO {
     private int id;
-    @Column(name = "order_Id")
     private int orderId;
-    @Column(name="product_Id")
     private int productId;
-    @Column(name = "quantity")
+    private String productName;
     private int productQuantity;
-    @Column(name = "price")
     private float productPrice;
     private BigDecimal totalPrice;
     private float discount;
     private String description;
     private boolean isActive;
-    @ManyToOne
-    @JoinColumn(name = "order_id",nullable = false,insertable = false,updatable = false)
-    private Order order;
-
-    @ManyToOne
-    @JoinColumn(name="product_id",nullable = false,insertable = false,updatable = false)
-    private Product product;
 
     public int getId() {
         return id;
@@ -49,6 +36,14 @@ public class OrderProduct  {
 
     public void setProductId(int productId) {
         this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public int getProductQuantity() {
@@ -97,36 +92,5 @@ public class OrderProduct  {
 
     public void setActive(boolean active) {
         isActive = active;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderProduct{" +
-                "id=" + id +
-                ", orderId=" + orderId +
-                ", productId=" + productId +
-                ", productQuantity=" + productQuantity +
-                ", productPrice=" + productPrice +
-                ", totalPrice=" + totalPrice +
-                ", discount=" + discount +
-                ", description='" + description + '\'' +
-                ", isActive=" + isActive +
-                '}';
     }
 }

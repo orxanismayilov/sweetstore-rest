@@ -1,6 +1,7 @@
 package com.orxan.sweetstorerest.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity(name = "PRODUCTS")
@@ -14,6 +15,9 @@ public class Product {
     private float price;
     private boolean isActive;
     private int updatedBy;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderProduct> orderProducts;
 
     public int getId() {
         return id;
@@ -61,6 +65,22 @@ public class Product {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public int getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(int updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public List<OrderProduct> getOrderProducts() {
+        return orderProducts;
+    }
+
+    public void setOrderProducts(List<OrderProduct> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 
     @Override

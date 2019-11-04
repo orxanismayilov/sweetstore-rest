@@ -1,5 +1,6 @@
 package com.orxan.sweetstorerest.service;
 
+import com.orxan.sweetstorerest.dtos.OrderProductDTO;
 import com.orxan.sweetstorerest.dtos.OrderProductsDTO;
 import com.orxan.sweetstorerest.model.OrderProduct;
 
@@ -12,7 +13,7 @@ public interface OrderProductService {
 
     boolean removeOrderProductById(int id,String username);
 
-    OrderProduct getOrderProduct(int id,String username);
+    OrderProductDTO getOrderProduct(int id, String username);
 
     OrderProductsDTO getOrderProductByOrderId(int orderId,String username);
 

@@ -2,12 +2,12 @@ package com.orxan.sweetstorerest.model;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Entity(name = "ORDER_DETAILS")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private int id;
     @Column(name = "customer_name")
@@ -23,13 +23,15 @@ public class Order {
     @Column(name = "total_discount")
     private BigDecimal totalDiscount;
     @Column(name = "insert_date")
-    private String date;
+    private Date date;
     @Column(name = "order_status")
     private String orderStatus;
     @Column(name = "is_active")
     private boolean isActive;
-    @OneToMany(mappedBy = "orderProduct")
+    private int updated_by=1;
+    @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProducts;
+
     public String getCustomerName() {
         return customerName;
     }
@@ -86,12 +88,13 @@ public class Order {
         this.totalDiscount = totalDiscount;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    @PrePersist
+    public void onCreated() {
+        this.date = new Date();
     }
 
     public String getOrderStatus() {
@@ -108,6 +111,14 @@ public class Order {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public List<OrderProduct> getOrderProducts() {
+        return orderProducts;
+    }
+
+    public void setOrderProducts(List<OrderProduct> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 
     @Override
