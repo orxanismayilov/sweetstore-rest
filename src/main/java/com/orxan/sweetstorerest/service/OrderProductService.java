@@ -20,6 +20,4 @@ public interface OrderProductService {
     OrderProduct updateOrderProduct(OrderProduct newOrderProduct, int id,String username);
 
     List<String> validateOrderProduct(OrderProduct orderProduct,String username);
-
-    BigDecimal getTotalDiscount(int orderId,String username);
 }

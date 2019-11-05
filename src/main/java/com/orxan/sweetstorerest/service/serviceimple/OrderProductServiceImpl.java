@@ -1,20 +1,18 @@
 package com.orxan.sweetstorerest.service.serviceimple;
 
 import com.orxan.sweetstorerest.aop.LoggerAnnotation;
-import com.orxan.sweetstorerest.dtos.OrderDTO;
 import com.orxan.sweetstorerest.dtos.OrderProductDTO;
 import com.orxan.sweetstorerest.dtos.OrderProductsDTO;
 import com.orxan.sweetstorerest.dtos.ProductDTO;
 import com.orxan.sweetstorerest.exceptions.InvalidOrderProductException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
+import com.orxan.sweetstorerest.mappers.OrderProductMapper;
 import com.orxan.sweetstorerest.model.OrderProduct;
-import com.orxan.sweetstorerest.model.OrderProductSummary;
 import com.orxan.sweetstorerest.repository.daoimpl.OrderProductDaoImpl;
 import com.orxan.sweetstorerest.repository.daoimpl.OrderProductJpaRepo;
 import com.orxan.sweetstorerest.service.OrderProductService;
 import com.orxan.sweetstorerest.service.ProductService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,14 +24,10 @@ import java.util.List;
 @Service
 public class OrderProductServiceImpl implements OrderProductService {
 
-    @Autowired
-    private  OrderProductDaoImpl orderProductDao;
-    @Autowired
-    private ProductService productService;
-    @Autowired
-    private OrderProductJpaRepo repo;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final OrderProductDaoImpl orderProductDao;
+    private final ProductService productService;
+    private final OrderProductJpaRepo repo;
+    private final OrderProductMapper mapper;
 
     @Value("${error.product.negativeQuantity}")
     private String negativeQuantity;
@@ -43,6 +37,14 @@ public class OrderProductServiceImpl implements OrderProductService {
     private String negativeTotalPrice;
     @Value("${error.orderProduct.negativeDiscount}")
     private String negativeDiscount;
+
+    @Autowired
+    public OrderProductServiceImpl(OrderProductDaoImpl orderProductDao, ProductService productService, OrderProductJpaRepo repo, OrderProductMapper mapper) {
+        this.orderProductDao = orderProductDao;
+        this.productService = productService;
+        this.repo = repo;
+        this.mapper = mapper;
+    }
 
     @Override
     @LoggerAnnotation
@@ -56,8 +58,8 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Override
     @LoggerAnnotation
     public boolean removeOrderProductById(int id,String username) {
-            if (orderProductDao.isOrderProductExists(id)) {
-                orderProductDao.removeOrderProductById(id);
+        if (repo.existsById(id)) {
+                repo.deleteById(id);
                 return true;
             } else throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
     }
@@ -65,28 +67,17 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Override
     @LoggerAnnotation
     public OrderProductDTO getOrderProduct(int id,String username) {
-        modelMapper.getConfiguration().setAmbiguityIgnored(true);
-        return modelMapper.map(repo.findByIdAndIsActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("OrderProduct not found="+id)),OrderProductDTO.class);
+        return mapper.mapOrderProductDTO(repo.findByIdAndIsActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("OrderProduct not found="+id)));
     }
 
     @Override
     @LoggerAnnotation
     public OrderProductsDTO getOrderProductByOrderId(int orderId, String username) {
-        // TO DO: custom model mapper
-
-        modelMapper.getConfiguration().setAmbiguityIgnored(true);
         List<OrderProductDTO> orderProductList = new ArrayList<>();
         for (OrderProduct orderProduct : repo.findByOrderId(orderId)) {
-            PropertyMap<OrderProduct, OrderProductDTO> propertyMap = new PropertyMap<OrderProduct, OrderProductDTO>() {
-                protected void configure() {
-                    map().setProductName(source.getProduct().getName());
-                }
-            };
-            modelMapper.map(orderProduct, OrderProductDTO.class);
+            orderProductList.add(mapper.mapOrderProductDTO(orderProduct));
         }
-        OrderProductSummary summary = orderProductDao.getOrderProductSummary(orderId);
         OrderProductsDTO dto = new OrderProductsDTO();
-        dto.setSummary(summary);
         dto.setOrderProducts(orderProductList);
         return dto;
     }
@@ -96,10 +87,9 @@ public class OrderProductServiceImpl implements OrderProductService {
     public OrderProduct updateOrderProduct(OrderProduct newOrderProduct, int id,String username) {
             List<String> errorList = validateOrderProduct(newOrderProduct, username);
             if (errorList.isEmpty()) {
-                orderProductDao.updateOrderProduct(newOrderProduct, id);
-                OrderProduct orderProduct = orderProductDao.getOrderProduct(id);
-                if (orderProduct == null) throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
-                return orderProduct;
+                newOrderProduct.setId(id);
+                if (repo.existsById(id)) throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
+                return repo.save(newOrderProduct);
             } else throw new InvalidOrderProductException(errorList);
     }
 
@@ -126,9 +116,4 @@ public class OrderProductServiceImpl implements OrderProductService {
         return errorList;
     }
 
-    @Override
-    @LoggerAnnotation
-    public BigDecimal getTotalDiscount(int orderId,String username) {
-            return orderProductDao.getTotalDiscount(orderId);
-    }
 }
