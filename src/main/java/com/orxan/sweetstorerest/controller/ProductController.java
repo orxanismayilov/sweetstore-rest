@@ -30,8 +30,8 @@ public class ProductController {
 
     @GetMapping("/in-stock")
     public ResponseEntity<ResponseObject> getProductListInStock(@RequestParam String username) {
-        List<Product> list=productService.getProductListInStock(username);
-        ResponseObject<List<Product>> responseObject=new ResponseObject<>("success",list);
+        List<ProductDTO> list=productService.getProductListInStock(username);
+        ResponseObject<List<ProductDTO>> responseObject=new ResponseObject<>("success",list);
         return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 

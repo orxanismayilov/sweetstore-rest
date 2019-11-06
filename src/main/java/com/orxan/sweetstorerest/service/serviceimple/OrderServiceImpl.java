@@ -19,14 +19,16 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    private final OrderDaoImpl orderDao;
+    private final OrderJpaRepo repo;
+    private final ModelMapper modelMapper;
+
     @Autowired
-    private OrderDaoImpl orderDao;
-    @Autowired
-    private OrderProductService orderProductService;
-    @Autowired
-    private OrderJpaRepo repo;
-    @Autowired
-    private ModelMapper modelMapper;
+    public OrderServiceImpl(OrderDaoImpl orderDao, OrderJpaRepo repo, ModelMapper modelMapper) {
+        this.orderDao = orderDao;
+        this.repo = repo;
+        this.modelMapper = modelMapper;
+    }
 
 
     @Override
@@ -37,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
             int toIndex=Math.min(fromIndex+rowsPerPage,totalCount);
             OrdersDTO ordersDTO=new OrdersDTO();
             ordersDTO.setOrders(new ArrayList<>());
+
             ordersDTO.setCount(repo.countByIsActiveTrue());
             for (Order order:repo.findByIsActiveTrue()) {
                 ordersDTO.getOrders().add(modelMapper.map(order,OrderDTO.class));

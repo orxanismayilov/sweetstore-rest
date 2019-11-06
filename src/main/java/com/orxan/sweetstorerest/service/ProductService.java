@@ -20,7 +20,7 @@ public interface ProductService {
 
     ProductDTO getProductById(int id,String username);
 
-    List<Product> getProductListInStock(String username);
+    List<ProductDTO> getProductListInStock(String username);
 
     int getTotalCountOfProduct(String username);
 }

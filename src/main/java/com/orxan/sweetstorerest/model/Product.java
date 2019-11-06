@@ -2,9 +2,9 @@ package com.orxan.sweetstorerest.model;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
-@Entity(name = "PRODUCTS")
+@Entity
+@Table(name = "PRODUCTS")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,6 +18,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<OrderProduct> orderProducts;
+
+    public Product() {
+    }
 
     public int getId() {
         return id;

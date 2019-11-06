@@ -5,7 +5,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-@Entity(name = "ORDER_DETAILS")
+@Entity
+@Table(name = "ORDER_DETAILS")
 public class Order {
     @Id
     @Column(name = "id")

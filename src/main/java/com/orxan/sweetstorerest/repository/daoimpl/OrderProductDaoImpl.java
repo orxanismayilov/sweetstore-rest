@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -29,7 +30,7 @@ public class OrderProductDaoImpl implements OrderProductDao {
     @Override
     public List<OrderProduct> getListByOrderId(int orderId) {
         String sql = "select op.id,op.order_Id,op.product_id,p.name,op.price,op.quantity,op.total_price,op.discount,op.description,op.is_active from ORDER_PRODUCT op inner join PRODUCTS p  on op.product_id=p.id where op.order_id=? and op.is_active=1;";
-       return jdbcTemplate.query(sql,new OrderProductMapper(),orderId);
+       return new ArrayList<>();//jdbcTemplate.query(sql,new OrderProductMapper(),orderId);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class OrderProductDaoImpl implements OrderProductDao {
         String sql = "select op.id,op.order_Id,op.product_id,p.name,op.price,op.quantity,op.total_price,op.discount,op.description,op.is_active\n" +
                 "from ORDER_PRODUCT as op inner join PRODUCTS as p on op.product_id=p.id where op.id=? AND op.is_active=1;";
        try {
-           return (OrderProduct) jdbcTemplate.queryForObject(sql,new OrderProductMapper(),id);
+           return new OrderProduct();// (OrderProduct) jdbcTemplate.queryForObject(sql,new OrderProductMapper(),id);
        } catch (EmptyResultDataAccessException e) {
            logger.error(e.getMessage());
            return null;

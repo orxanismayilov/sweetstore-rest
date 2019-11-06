@@ -6,7 +6,6 @@ import com.orxan.sweetstorerest.dtos.ProductsDTO;
 import com.orxan.sweetstorerest.exceptions.InvalidProductException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.model.Product;
-import com.orxan.sweetstorerest.repository.daoimpl.ProductDaoImpl;
 import com.orxan.sweetstorerest.repository.ProductJpaRepo;
 import com.orxan.sweetstorerest.service.ProductService;
 import com.orxan.sweetstorerest.util.NumberUtils;
@@ -24,8 +23,6 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductDaoImpl productDao;
     @Autowired
     private ProductJpaRepo jpaRepo;
     @Autowired
@@ -63,12 +60,10 @@ public class ProductServiceImpl implements ProductService {
         int fromIndex = pageIndex * rowsPerPage;
         int toIndex = Math.min(fromIndex + rowsPerPage, totalCount);
         ProductsDTO productsDTO = new ProductsDTO();
-        List<Product> productList =new ArrayList<>();
-        jpaRepo.findByIsActiveTrue().forEach(productList::add);
         long prList = System.currentTimeMillis();
         diff = prList - time;
         //logger.info("time difference prList :" + diff);
-        productsDTO.setProducts(productList);
+        productsDTO.setProducts(jpaRepo.findByIsActiveTrue());
         productsDTO.setCount(totalCount);
         long finalTime = System.currentTimeMillis();
         diff = finalTime - startTime;
@@ -164,10 +159,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @LoggerAnnotation
-    public List<Product> getProductListInStock(String username) {
-        List<Product> productList=new ArrayList<>();
-        jpaRepo.findByQuantityGreaterThanAndIsActiveTrue(0).forEach(productList::add);
-        return productList;
+    public List<ProductDTO> getProductListInStock(String username) {
+        return jpaRepo.findAllProductsByQuantity(0);
 }
 
     @Override

@@ -3,7 +3,8 @@ package com.orxan.sweetstorerest.model;
 import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Entity(name = "ORDER_PRODUCT")
+@Entity
+@Table(name = "ORDER_PRODUCT")
 public class OrderProduct  {
     @Id
     private int id;
@@ -19,11 +20,11 @@ public class OrderProduct  {
     private float discount;
     private String description;
     private boolean isActive;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id",nullable = false,insertable = false,updatable = false)
     private Order order;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="product_id",nullable = false,insertable = false,updatable = false)
     private Product product;
 

@@ -8,6 +8,18 @@ public class ProductDTO {
     private float price;
     private boolean isActive;
 
+    public ProductDTO() {
+    }
+
+    public ProductDTO(int id, String name, int quantity, String updateDate, float price, boolean isActive) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.updateDate = updateDate;
+        this.price = price;
+        this.isActive = isActive;
+    }
+
     public int getId() {
         return id;
     }

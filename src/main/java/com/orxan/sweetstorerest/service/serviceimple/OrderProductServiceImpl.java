@@ -8,23 +8,19 @@ import com.orxan.sweetstorerest.exceptions.InvalidOrderProductException;
 import com.orxan.sweetstorerest.exceptions.ResourceNotFoundException;
 import com.orxan.sweetstorerest.mappers.OrderProductMapper;
 import com.orxan.sweetstorerest.model.OrderProduct;
-import com.orxan.sweetstorerest.repository.daoimpl.OrderProductDaoImpl;
-import com.orxan.sweetstorerest.repository.daoimpl.OrderProductJpaRepo;
+import com.orxan.sweetstorerest.repository.OrderProductJpaRepo;
 import com.orxan.sweetstorerest.service.OrderProductService;
 import com.orxan.sweetstorerest.service.ProductService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class OrderProductServiceImpl implements OrderProductService {
 
-    private final OrderProductDaoImpl orderProductDao;
     private final ProductService productService;
     private final OrderProductJpaRepo repo;
     private final OrderProductMapper mapper;
@@ -39,8 +35,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     private String negativeDiscount;
 
     @Autowired
-    public OrderProductServiceImpl(OrderProductDaoImpl orderProductDao, ProductService productService, OrderProductJpaRepo repo, OrderProductMapper mapper) {
-        this.orderProductDao = orderProductDao;
+    public OrderProductServiceImpl(ProductService productService, OrderProductJpaRepo repo, OrderProductMapper mapper) {
         this.productService = productService;
         this.repo = repo;
         this.mapper = mapper;
@@ -73,12 +68,8 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Override
     @LoggerAnnotation
     public OrderProductsDTO getOrderProductByOrderId(int orderId, String username) {
-        List<OrderProductDTO> orderProductList = new ArrayList<>();
-        for (OrderProduct orderProduct : repo.findByOrderId(orderId)) {
-            orderProductList.add(mapper.mapOrderProductDTO(orderProduct));
-        }
         OrderProductsDTO dto = new OrderProductsDTO();
-        dto.setOrderProducts(orderProductList);
+        dto.setOrderProducts(repo.findByOrderId(orderId));
         return dto;
     }
 

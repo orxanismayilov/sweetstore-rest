@@ -2,12 +2,10 @@ package com.orxan.sweetstorerest.mappers;
 
 import com.orxan.sweetstorerest.dtos.OrderProductDTO;
 import com.orxan.sweetstorerest.model.OrderProduct;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
-public class OrderProductMapper{
-    @Bean
+public class OrderProductMapper  {
+
+
     public OrderProductDTO mapOrderProductDTO(OrderProduct orderProduct) {
         OrderProductDTO dto=new OrderProductDTO();
         dto.setId(orderProduct.getId());
@@ -21,5 +19,8 @@ public class OrderProductMapper{
         dto.setDescription(orderProduct.getDescription());
         dto.setActive(orderProduct.isActive());
         return dto;
+    }
+    public OrderProductMapper orderProductMapper(){
+        return new OrderProductMapper();
     }
 }
