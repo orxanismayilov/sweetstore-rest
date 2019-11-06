@@ -14,6 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -49,7 +52,6 @@ public class ProductServiceImpl implements ProductService {
     @LoggerAnnotation
     public ProductsDTO getProductList(int pageIndex, int rowsPerPage, String username) {
         long startTime = System.currentTimeMillis();
-
         long usertime = System.currentTimeMillis();
         long diff = usertime - startTime;
         //logger.info("time difference :" + diff);
@@ -63,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
         long prList = System.currentTimeMillis();
         diff = prList - time;
         //logger.info("time difference prList :" + diff);
-        productsDTO.setProducts(jpaRepo.findByIsActiveTrue());
+        productsDTO.setProducts(jpaRepo.findByIsActiveTrue(createPageRequest(pageIndex,rowsPerPage)));
         productsDTO.setCount(totalCount);
         long finalTime = System.currentTimeMillis();
         diff = finalTime - startTime;
@@ -176,5 +178,9 @@ public class ProductServiceImpl implements ProductService {
         }
         finalName = finalName.substring(0, 1).toUpperCase() + finalName.substring(1);
         return finalName;
+    }
+
+    private Pageable createPageRequest(int page,int rows) {
+        return PageRequest.of(page,rows, Sort.Direction.DESC,"id");
     }
 }

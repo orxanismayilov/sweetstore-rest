@@ -2,6 +2,7 @@ package com.orxan.sweetstorerest.repository;
 
 import com.orxan.sweetstorerest.dtos.ProductDTO;
 import com.orxan.sweetstorerest.model.Product;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +15,7 @@ public interface ProductJpaRepo extends JpaRepository<Product,Integer> {
 
     @Query("Select new com.orxan.sweetstorerest.dtos.ProductDTO(p.id, p.name, p.quantity, p.updateDate, p.price, p.isActive)" +
             " FROM Product p WHERE p.isActive=true")
-    List<ProductDTO> findByIsActiveTrue();
+    List<ProductDTO> findByIsActiveTrue(Pageable pageable);
 
     Product findFirstByName (String name);
 
