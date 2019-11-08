@@ -3,6 +3,7 @@ package com.orxan.sweetstorerest.service;
 import com.orxan.sweetstorerest.dtos.OrderProductDTO;
 import com.orxan.sweetstorerest.dtos.OrderProductsDTO;
 import com.orxan.sweetstorerest.model.OrderProduct;
+import com.orxan.sweetstorerest.model.OrderProductSummary;
 
 import java.math.BigDecimal;
 import java.util.List;

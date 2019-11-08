@@ -1,6 +1,8 @@
 package com.orxan.sweetstorerest.repository;
 
 import com.orxan.sweetstorerest.model.OrderProduct;
+import com.orxan.sweetstorerest.model.OrderProductSummary;
+import com.orxan.sweetstorerest.model.Summary;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +20,7 @@ public interface OrderProductJpaRepo extends CrudRepository<OrderProduct,Integer
     List<OrderProductDTO> findByOrderId(@Param("orderId") int orderId);
 
      Optional<OrderProduct> findByIdAndIsActiveTrue(int id);
+
+     @Query(value = "SELECT SUM(op.discount) AS TotalDiscount,SUM(op.total_price) AS TotalPrice,GROUP_CONCAT(op.description separator ',') AS description FROM order_product op WHERE op.order_Id=?1 AND op.is_active=1",nativeQuery = true)
+     Summary findOrderProductSummary(int orderId);
 }

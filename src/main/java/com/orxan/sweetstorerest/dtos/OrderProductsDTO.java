@@ -1,12 +1,12 @@
 package com.orxan.sweetstorerest.dtos;
 
-import com.orxan.sweetstorerest.model.OrderProductSummary;
+import com.orxan.sweetstorerest.model.Summary;
 
 import java.util.List;
 
 public class OrderProductsDTO {
     private List<OrderProductDTO> orderProducts;
-    private OrderProductSummary summary;
+    private Summary summary;
 
     public OrderProductsDTO() {
     }
@@ -19,11 +19,11 @@ public class OrderProductsDTO {
         this.orderProducts = orderProducts;
     }
 
-    public OrderProductSummary getSummary() {
+    public Summary getSummary() {
         return summary;
     }
 
-    public void setSummary(OrderProductSummary summary) {
+    public void setSummary(Summary summary) {
         this.summary = summary;
     }
 }

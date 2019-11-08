@@ -70,6 +70,7 @@ public class OrderProductServiceImpl implements OrderProductService {
     public OrderProductsDTO getOrderProductByOrderId(int orderId, String username) {
         OrderProductsDTO dto = new OrderProductsDTO();
         dto.setOrderProducts(repo.findByOrderId(orderId));
+        dto.setSummary(repo.findOrderProductSummary(orderId));
         return dto;
     }
 

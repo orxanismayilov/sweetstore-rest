@@ -10,6 +10,12 @@ public class OrderProductSummary {
     public OrderProductSummary() {
     }
 
+    public OrderProductSummary(String description,BigDecimal totalPrice, double totalDiscount) {
+        this.description=this.description+description+",";
+        this.totalPrice = totalPrice;
+        this.totalDiscount = new BigDecimal(totalDiscount);
+    }
+
     public String getDescription() {
         return description;
     }
