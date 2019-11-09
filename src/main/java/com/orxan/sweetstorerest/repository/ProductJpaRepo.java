@@ -20,7 +20,7 @@ public interface ProductJpaRepo extends JpaRepository<Product,Integer> {
     Product findFirstByName (String name);
 
     @Query("SELECT new com.orxan.sweetstorerest.dtos.ProductDTO(p.id, p.name, p.quantity, p.updateDate, p.price, p.isActive)" +
-            " FROM Product p WHERE p.quantity>:quantity")
+            " FROM Product p WHERE p.quantity>:quantity and p.isActive=true")
     List<ProductDTO> findAllProductsByQuantity(@Param("quantity") int quantity);
 
     int countByIsActiveTrue();

@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 @Table(name = "ORDER_PRODUCT")
 public class OrderProduct  {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @Column(name = "order_Id")
     private int orderId;

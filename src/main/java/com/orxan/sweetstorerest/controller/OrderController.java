@@ -35,12 +35,12 @@ public class OrderController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<ResponseObject> findOrderById(@RequestParam int id,
+    public ResponseEntity<ResponseObject> findOrderById(@RequestParam String id,
                                                         @RequestParam(value="getAll",defaultValue = "false")
                                                                 boolean getAll,
                                                         @RequestParam String username) {
-        List<Order> list=orderService.searchOrderById(id,getAll,username);
-        ResponseObject<List<Order>> responseObject=new ResponseObject<>("success",list);
+        List<OrderDTO> list=orderService.searchOrderById(id,getAll,username);
+        ResponseObject<List<OrderDTO>> responseObject=new ResponseObject<>("success",list);
         return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
@@ -53,8 +53,8 @@ public class OrderController {
 
     @PostMapping
     public  ResponseEntity<ResponseObject> addOrder(@RequestBody Order order,@RequestParam String username) {
-       Order order1= orderService.addOrder(order,username);
-       ResponseObject<Order> responseObject=new ResponseObject<>("success",order1);
+       OrderDTO orderDTO= orderService.addOrder(order,username);
+       ResponseObject<OrderDTO> responseObject=new ResponseObject<>("success",orderDTO);
        return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
 
@@ -66,8 +66,8 @@ public class OrderController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseObject> updateOrder(@RequestBody Order order, @PathVariable int id,@RequestParam String username) {
-       Order order1= orderService.updateOrderById(order,id,username);
-       ResponseObject<Order> responseObject=new ResponseObject<>("success",order1);
+       OrderDTO orderDTO= orderService.updateOrderById(order,id,username);
+       ResponseObject<OrderDTO> responseObject=new ResponseObject<>("success",orderDTO);
        return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
 }

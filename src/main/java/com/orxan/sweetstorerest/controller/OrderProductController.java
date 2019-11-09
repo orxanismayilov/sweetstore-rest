@@ -44,8 +44,8 @@ public class OrderProductController {
     public  ResponseEntity<ResponseObject> updateOrderProduct(@RequestBody OrderProduct orderProduct,
                                                               @PathVariable int id,
                                                               @RequestParam String username){
-        OrderProduct orderProduct1=orderProductService.updateOrderProduct(orderProduct,id,username);
-        ResponseObject<OrderProduct> responseObject=new ResponseObject<>("success",orderProduct1);
+        OrderProductDTO orderProduct1=orderProductService.updateOrderProduct(orderProduct,id,username);
+        ResponseObject<OrderProductDTO> responseObject=new ResponseObject<>("success",orderProduct1);
         return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
 

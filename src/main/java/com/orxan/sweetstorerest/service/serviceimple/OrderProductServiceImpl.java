@@ -53,10 +53,10 @@ public class OrderProductServiceImpl implements OrderProductService {
     @Override
     @LoggerAnnotation
     public boolean removeOrderProductById(int id,String username) {
-        if (repo.existsById(id)) {
-                repo.deleteById(id);
-                return true;
-            } else throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
+        OrderProduct orderProduct=repo.findByIdAndIsActiveTrue(id).orElseThrow(()->new ResourceNotFoundException("OrderProduct not found.Id=" + id));
+        orderProduct.setActive(false);
+        repo.save(orderProduct);
+        return true;
     }
 
     @Override
@@ -76,12 +76,12 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     @LoggerAnnotation
-    public OrderProduct updateOrderProduct(OrderProduct newOrderProduct, int id,String username) {
+    public OrderProductDTO updateOrderProduct(OrderProduct newOrderProduct, int id, String username) {
             List<String> errorList = validateOrderProduct(newOrderProduct, username);
             if (errorList.isEmpty()) {
                 newOrderProduct.setId(id);
                 if (repo.existsById(id)) throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
-                return repo.save(newOrderProduct);
+                return mapper.mapOrderProductDTO(repo.save(newOrderProduct));
             } else throw new InvalidOrderProductException(errorList);
     }
 

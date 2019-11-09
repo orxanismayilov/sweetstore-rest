@@ -2,6 +2,7 @@ package com.orxan.sweetstorerest.dtos;
 
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class OrderDTO {
     private int id;
@@ -14,6 +15,22 @@ public class OrderDTO {
     private String date;
     private String orderStatus;
     private boolean isActive;
+
+    public OrderDTO() {
+    }
+
+    public OrderDTO(int id, String customerName, String customerAddress, String description, String orderType, BigDecimal totalPrice, BigDecimal totalDiscount, Date date, String orderStatus, boolean isActive) {
+        this.id = id;
+        this.customerName = customerName;
+        this.customerAddress = customerAddress;
+        this.description = description;
+        this.orderType = orderType;
+        this.totalPrice = totalPrice;
+        this.totalDiscount = totalDiscount;
+        this.date =String.valueOf(date);
+        this.orderStatus = orderStatus;
+        this.isActive = isActive;
+    }
 
     public String getCustomerName() {
         return customerName;

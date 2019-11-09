@@ -1,6 +1,7 @@
 package com.orxan.sweetstorerest.model;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -11,7 +12,7 @@ public class Product {
     private int id;
     private String name;
     private int quantity;
-    private String updateDate;
+    private Date updateDate;
     private float price;
     private boolean isActive;
     private int updatedBy;
@@ -46,12 +47,17 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public String getUpdateDate() {
+    public Date getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(String updateDate) {
-        this.updateDate = updateDate;
+    @PreUpdate
+    public void onUpdate() {
+        this.updateDate = new Date();
+    }
+    @PrePersist
+    public void onCreate() {
+        this.updateDate=new Date();
     }
 
     public float getPrice() {

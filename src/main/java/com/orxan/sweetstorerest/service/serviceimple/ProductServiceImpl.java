@@ -80,7 +80,6 @@ public class ProductServiceImpl implements ProductService {
         if (errorList.isEmpty()) {
             Product checkProduct = jpaRepo.findFirstByName(product.getName());
             if (checkProduct == null) {
-                product.setUpdateDate(LocalDateTime.now().toString());
                 return modelMapper.map(jpaRepo.save(product), ProductDTO.class);
             } else {
                 checkProduct.setQuantity(product.getQuantity() + checkProduct.getQuantity());
@@ -98,6 +97,7 @@ public class ProductServiceImpl implements ProductService {
         if (jpaRepo.findById(oldProductId).isPresent()) {
             List<String> errorList = isProductValid(product);
             if (errorList.isEmpty()) {
+                product.setId(oldProductId);
                 return modelMapper.map(jpaRepo.save(product),ProductDTO.class);
             } else {
                 throw new InvalidProductException(errorList);

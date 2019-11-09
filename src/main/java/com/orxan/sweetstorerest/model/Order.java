@@ -10,6 +10,7 @@ import java.util.List;
 public class Order {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @Column(name = "customer_name")
     private String customerName;
@@ -23,13 +24,15 @@ public class Order {
     private BigDecimal totalPrice;
     @Column(name = "total_discount")
     private BigDecimal totalDiscount;
-    @Column(name = "insert_date")
+    @Column(name = "insert_date",updatable = false)
     private Date date;
     @Column(name = "order_status")
     private String orderStatus;
     @Column(name = "is_active")
     private boolean isActive;
-    private int updated_by=1;
+    @Column(name="updated_by")
+    private int updatedBy =1;
+
     @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProducts;
 
@@ -112,6 +115,14 @@ public class Order {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public int getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(int updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     public List<OrderProduct> getOrderProducts() {

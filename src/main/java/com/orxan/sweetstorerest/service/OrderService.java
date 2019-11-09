@@ -10,15 +10,15 @@ public interface OrderService {
 
     OrdersDTO getOrderList(int pageIndex, int rowsPerPage,String username);
 
-    Order addOrder(Order order, String username);
+    OrderDTO addOrder(Order order, String username);
 
-    List<Order> searchOrderById(int id, boolean searchAll,String username);
+    List<OrderDTO> searchOrderById(String id, boolean searchAll, String username);
 
     OrderDTO getOrder(int id, String username);
 
     boolean deleteOrderByTransactionId(int transactionId,String username);
 
-    Order updateOrderById(Order newOrder, int orderId,String username);
+    OrderDTO updateOrderById(Order newOrder, int orderId, String username);
 
     int getTotalCountOfOrder(String username);
 }

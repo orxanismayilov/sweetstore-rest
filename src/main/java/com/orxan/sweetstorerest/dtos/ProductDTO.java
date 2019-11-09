@@ -1,5 +1,7 @@
 package com.orxan.sweetstorerest.dtos;
 
+import java.util.Date;
+
 public class ProductDTO {
     private int id;
     private String name;
@@ -11,11 +13,11 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(int id, String name, int quantity, String updateDate, float price, boolean isActive) {
+    public ProductDTO(int id, String name, int quantity, Date updateDate, float price, boolean isActive) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
-        this.updateDate = updateDate;
+        this.updateDate = String.valueOf(updateDate);
         this.price = price;
         this.isActive = isActive;
     }
