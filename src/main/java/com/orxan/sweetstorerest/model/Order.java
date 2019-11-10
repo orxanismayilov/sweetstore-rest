@@ -24,14 +24,14 @@ public class Order {
     private BigDecimal totalPrice;
     @Column(name = "total_discount")
     private BigDecimal totalDiscount;
-    @Column(name = "insert_date",updatable = false)
+    @Column(name = "insert_date", updatable = false)
     private Date date;
     @Column(name = "order_status")
     private String orderStatus;
     @Column(name = "is_active")
     private boolean isActive;
-    @Column(name="updated_by")
-    private int updatedBy =1;
+    @Column(name = "updated_by")
+    private int updatedBy = 1;
 
     @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProducts;

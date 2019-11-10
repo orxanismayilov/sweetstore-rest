@@ -6,7 +6,7 @@ public class UserDTO {
     private int id;
     private String name;
     private UserRole role;
-    private  boolean isActive;
+    private boolean isActive;
 
     public int getId() {
         return id;

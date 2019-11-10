@@ -12,8 +12,8 @@ public class NumberUtils {
         return false;
     }
 
-    public static boolean isNumberFloat(String number){
-        if (number.matches(FLOAT_REGEX)){
+    public static boolean isNumberFloat(String number) {
+        if (number.matches(FLOAT_REGEX)) {
             return true;
         }
         return false;

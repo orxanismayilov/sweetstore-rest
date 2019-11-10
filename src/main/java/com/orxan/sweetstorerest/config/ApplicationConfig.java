@@ -5,7 +5,6 @@ import com.orxan.sweetstorerest.model.MyUserPrincipal;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Configuration
 public class ApplicationConfig {

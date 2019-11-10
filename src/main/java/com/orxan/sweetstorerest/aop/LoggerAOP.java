@@ -1,15 +1,11 @@
 package com.orxan.sweetstorerest.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.aspectj.weaver.AjAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -18,17 +14,17 @@ import java.util.List;
 @Aspect
 public class LoggerAOP {
 
-    private final Logger logger= LoggerFactory.getLogger(this.getClass());
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Around("execution(public * *(..)) &&@annotation(LoggerAnnotation)")
     public Object aroundAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
-        StringBuilder logString=new StringBuilder();
+
+        StringBuilder logString = new StringBuilder();
         List<String> paramNames;
 
         try {
             MethodSignature codeSignature = (MethodSignature) joinPoint.getSignature();
-            paramNames= Arrays.asList(codeSignature.getParameterNames());
+            paramNames = Arrays.asList(codeSignature.getParameterNames());
             logString.append("method name:").append(codeSignature.getName());
         } catch (Exception e) {
             logger.error("Can't record action. You must compile the code with debug mode=true");
@@ -50,20 +46,21 @@ public class LoggerAOP {
                         .append(",value :").append(paramValue)
                         .append(".}");
             }
-            printLogAction(logString,params);
-        } catch (Exception e) {}
-        Object returned=joinPoint.proceed();
+            printLogAction(logString, params);
+        } catch (Exception ignored) {
+        }
+        Object returned = joinPoint.proceed();
         try {
-            StringBuilder params=new StringBuilder();
-            if(returned != null){
+            StringBuilder params = new StringBuilder();
+            if (returned != null) {
                 String returnedStr = returned.toString();
                 params
                         .append("{name: ").append("RETURN")
                         .append(",value : ").append(returnedStr.substring(0, returnedStr.length() < 100 ? returnedStr.length() : 100))
-                        .append(returnedStr.length() < 100 ?"":"...")
+                        .append(returnedStr.length() < 100 ? "" : "...")
                         .append("}");
             }
-            printLogAction(logString,params);
+            printLogAction(logString, params);
 
         } catch (Exception e) {
             logger.error("Exception occurred while intercepting method " + joinPoint.getSignature().getName(), e);
@@ -72,7 +69,7 @@ public class LoggerAOP {
         return returned;
     }
 
-    private void printLogAction(StringBuilder logString,StringBuilder params){
+    private void printLogAction(StringBuilder logString, StringBuilder params) {
         logString.append(",params:[").append(params).append("]");
         logger.info(String.valueOf(logString));
 

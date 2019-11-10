@@ -55,9 +55,10 @@ public class Product {
     public void onUpdate() {
         this.updateDate = new Date();
     }
+
     @PrePersist
     public void onCreate() {
-        this.updateDate=new Date();
+        this.updateDate = new Date();
     }
 
     public float getPrice() {

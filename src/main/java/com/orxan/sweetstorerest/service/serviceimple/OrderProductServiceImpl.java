@@ -13,6 +13,7 @@ import com.orxan.sweetstorerest.service.OrderProductService;
 import com.orxan.sweetstorerest.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,17 +44,19 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     @LoggerAnnotation
+    @Secured({"ROLE_ADMIN,ROLE_USER"})
     public OrderProduct saveOrderProduct(OrderProduct orderProduct) {
-            List<String> errorList = validateOrderProduct(orderProduct);
-            if (errorList.isEmpty()) {
-                return repo.save(orderProduct);
-            } else throw new InvalidOrderProductException(errorList);
+        List<String> errorList = validateOrderProduct(orderProduct);
+        if (errorList.isEmpty()) {
+            return repo.save(orderProduct);
+        } else throw new InvalidOrderProductException(errorList);
     }
 
     @Override
     @LoggerAnnotation
+    @Secured({"ROLE_ADMIN,ROLE_USER"})
     public boolean removeOrderProductById(int id) {
-        OrderProduct orderProduct=repo.findByIdAndIsActiveTrue(id).orElseThrow(()->new ResourceNotFoundException("OrderProduct not found.Id=" + id));
+        OrderProduct orderProduct = repo.findByIdAndIsActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("OrderProduct not found.Id=" + id));
         orderProduct.setActive(false);
         repo.save(orderProduct);
         return true;
@@ -61,12 +64,14 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     @LoggerAnnotation
+    @Secured({"ROLE_ADMIN,ROLE_USER"})
     public OrderProductDTO getOrderProduct(int id) {
-        return mapper.mapOrderProductDTO(repo.findByIdAndIsActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("OrderProduct not found="+id)));
+        return mapper.mapOrderProductDTO(repo.findByIdAndIsActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("OrderProduct not found=" + id)));
     }
 
     @Override
     @LoggerAnnotation
+    @Secured({"ROLE_ADMIN,ROLE_USER"})
     public OrderProductsDTO getOrderProductByOrderId(int orderId) {
         OrderProductsDTO dto = new OrderProductsDTO();
         dto.setOrderProducts(repo.findByOrderId(orderId));
@@ -76,32 +81,33 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     @LoggerAnnotation
+    @Secured({"ROLE_ADMIN,ROLE_USER"})
     public OrderProductDTO updateOrderProduct(OrderProduct newOrderProduct, int id) {
-            List<String> errorList = validateOrderProduct(newOrderProduct);
-            if (errorList.isEmpty()) {
-                newOrderProduct.setId(id);
-                if (repo.existsById(id)) throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
-                return mapper.mapOrderProductDTO(repo.save(newOrderProduct));
-            } else throw new InvalidOrderProductException(errorList);
+        List<String> errorList = validateOrderProduct(newOrderProduct);
+        if (errorList.isEmpty()) {
+            newOrderProduct.setId(id);
+            if (repo.existsById(id)) throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
+            return mapper.mapOrderProductDTO(repo.save(newOrderProduct));
+        } else throw new InvalidOrderProductException(errorList);
     }
 
     @Override
     @LoggerAnnotation
     public List<String> validateOrderProduct(OrderProduct orderProduct) {
-        List<String> errorList=new ArrayList<>();
-        ProductDTO product= productService.getProductById(orderProduct.getProductId());
+        List<String> errorList = new ArrayList<>();
+        ProductDTO product = productService.getProductById(orderProduct.getProductId());
 
         if (product != null) {
             if (orderProduct.getProductQuantity() <= 0) {
                 errorList.add(negativeQuantity);
             }
-            if (orderProduct.getProductQuantity()>product.getQuantity()){
-                errorList.add(possibleQuantity+"--Current quantity is :"+product.getQuantity());
+            if (orderProduct.getProductQuantity() > product.getQuantity()) {
+                errorList.add(possibleQuantity + "--Current quantity is :" + product.getQuantity());
             }
-            if (orderProduct.getDiscount()<0){
+            if (orderProduct.getDiscount() < 0) {
                 errorList.add(negativeDiscount);
             }
-            if(0 > orderProduct.getTotalPrice().floatValue()){
+            if (0 > orderProduct.getTotalPrice().floatValue()) {
                 errorList.add(negativeTotalPrice);
             }
         }

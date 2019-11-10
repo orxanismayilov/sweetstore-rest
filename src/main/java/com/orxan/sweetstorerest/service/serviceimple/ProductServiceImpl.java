@@ -17,19 +17,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductJpaRepo jpaRepo;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ProductJpaRepo jpaRepo;
+    private final ModelMapper modelMapper;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -48,8 +46,15 @@ public class ProductServiceImpl implements ProductService {
     @Value("$}error.product.maxPrice}")
     private String maxPrice;
 
+    @Autowired
+    public ProductServiceImpl(ProductJpaRepo jpaRepo, ModelMapper modelMapper) {
+        this.jpaRepo = jpaRepo;
+        this.modelMapper = modelMapper;
+    }
+
     @Override
     @LoggerAnnotation
+    @Secured({"ROLE_ADMIN,ROLE_USER"})
     public ProductsDTO getProductList(int pageIndex, int rowsPerPage) {
         long startTime = System.currentTimeMillis();
         long usertime = System.currentTimeMillis();
@@ -63,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
         long prList = System.currentTimeMillis();
         diff = prList - time;
         //logger.info("time difference prList :" + diff);
-        productsDTO.setProducts(jpaRepo.findByIsActiveTrue(createPageRequest(pageIndex,rowsPerPage)));
+        productsDTO.setProducts(jpaRepo.findByIsActiveTrue(createPageRequest(pageIndex, rowsPerPage)));
         productsDTO.setCount(totalCount);
         long finalTime = System.currentTimeMillis();
         diff = finalTime - startTime;
@@ -73,6 +78,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @LoggerAnnotation
+    @Secured({"ROLE_ADMIN,ROLE_USER"})
     public ProductDTO addProduct(Product product) {
         List<String> errorList = isProductValid(product);
         if (errorList.isEmpty()) {
@@ -82,7 +88,8 @@ public class ProductServiceImpl implements ProductService {
             } else {
                 checkProduct.setQuantity(product.getQuantity() + checkProduct.getQuantity());
                 checkProduct.setPrice(product.getPrice());
-                ProductDTO productDTO=modelMapper.map(jpaRepo.save(checkProduct), ProductDTO.class);;
+                ProductDTO productDTO = modelMapper.map(jpaRepo.save(checkProduct), ProductDTO.class);
+                ;
                 return productDTO;
             }
         } else
@@ -91,12 +98,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @LoggerAnnotation
+    @Secured({"ROLE_ADMIN,ROLE_USER"})
     public ProductDTO updateProduct(Product product, int oldProductId) {
         if (jpaRepo.findById(oldProductId).isPresent()) {
             List<String> errorList = isProductValid(product);
             if (errorList.isEmpty()) {
                 product.setId(oldProductId);
-                return modelMapper.map(jpaRepo.save(product),ProductDTO.class);
+                return modelMapper.map(jpaRepo.save(product), ProductDTO.class);
             } else {
                 throw new InvalidProductException(errorList);
             }
@@ -144,27 +152,30 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @LoggerAnnotation
-    public boolean deleteProductByID(int id) {
+    @Secured({"ROLE_ADMIN"})
+    public void deleteProductByID(int id) {
         if (jpaRepo.findById(id).isPresent()) {
             jpaRepo.deleteById(id);
-            return true;
         } else throw new ResourceNotFoundException("Product not found. Id=" + id);
     }
 
     @Override
     @LoggerAnnotation
+    @Secured({"ROLE_ADMIN,ROLE_USER"})
     public ProductDTO getProductById(int id) {
-        return modelMapper.map(jpaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found. Id="+String.valueOf(id))),ProductDTO.class);
+        return modelMapper.map(jpaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found. Id=" + String.valueOf(id))), ProductDTO.class);
     }
 
     @Override
     @LoggerAnnotation
+    @Secured({"ROLE_ADMIN,ROLE_USER"})
     public List<ProductDTO> getProductListInStock() {
         return jpaRepo.findAllProductsByQuantity(0);
-}
+    }
 
     @Override
     @LoggerAnnotation
+    @Secured({"ROLE_ADMIN,ROLE_USER"})
     public int getTotalCountOfProduct() {
         return jpaRepo.countByIsActiveTrue();
     }
@@ -178,7 +189,7 @@ public class ProductServiceImpl implements ProductService {
         return finalName;
     }
 
-    private Pageable createPageRequest(int page,int rows) {
-        return PageRequest.of(page,rows, Sort.Direction.DESC,"id");
+    private Pageable createPageRequest(int page, int rows) {
+        return PageRequest.of(page, rows, Sort.Direction.DESC, "id");
     }
 }

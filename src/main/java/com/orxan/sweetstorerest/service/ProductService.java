@@ -16,7 +16,7 @@ public interface ProductService {
 
     List<String> isProductValid(Product product);
 
-    boolean deleteProductByID(int id);
+    void deleteProductByID(int id);
 
     ProductDTO getProductById(int id);
 

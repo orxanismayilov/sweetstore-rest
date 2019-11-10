@@ -16,45 +16,49 @@ import java.util.List;
 @RequestMapping("/orders")
 public class OrderController {
 
+    private final OrderService orderService;
+
     @Autowired
-    private OrderService orderService;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     @GetMapping
     public ResponseEntity<ResponseObject> getAllOrders(@RequestParam int pageIndex, @RequestParam int maxRows) {
-       OrdersDTO orders= orderService.getOrderList(pageIndex,maxRows);
-       ResponseObject<OrdersDTO> responseObject=new ResponseObject<>("success",orders);
-       return new ResponseEntity<>(responseObject,HttpStatus.OK);
+        OrdersDTO orders = orderService.getOrderList(pageIndex, maxRows);
+        ResponseObject<OrdersDTO> responseObject = new ResponseObject<>("success", orders);
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> getOrder(@PathVariable  int id) {
-        OrderDTO order= orderService.getOrder(id);
-        ResponseObject<OrderDTO> responseObject=new ResponseObject<>("success",order);
-        return new ResponseEntity<>(responseObject,HttpStatus.OK);
+    public ResponseEntity<ResponseObject> getOrder(@PathVariable int id) {
+        OrderDTO order = orderService.getOrder(id);
+        ResponseObject<OrderDTO> responseObject = new ResponseObject<>("success", order);
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }
 
 
     @GetMapping("/search")
     public ResponseEntity<ResponseObject> findOrderById(@RequestParam String id,
-                                                        @RequestParam(value="getAll",defaultValue = "false")
+                                                        @RequestParam(value = "getAll", defaultValue = "false")
                                                                 boolean getAll) {
-        List<OrderDTO> list=orderService.searchOrderById(id,getAll);
-        ResponseObject<List<OrderDTO>> responseObject=new ResponseObject<>("success",list);
-        return new ResponseEntity<>(responseObject,HttpStatus.OK);
+        List<OrderDTO> list = orderService.searchOrderById(id, getAll);
+        ResponseObject<List<OrderDTO>> responseObject = new ResponseObject<>("success", list);
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }
 
     @GetMapping("/count")
     public ResponseEntity<ResponseObject> getTotalCountofOrder() {
-        int count=orderService.getTotalCountOfOrder();
-        ResponseObject responseObject=new ResponseObject<>("success",count);
-        return new ResponseEntity<>(responseObject,HttpStatus.OK);
+        int count = orderService.getTotalCountOfOrder();
+        ResponseObject responseObject = new ResponseObject<>("success", count);
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }
 
     @PostMapping
-    public  ResponseEntity<ResponseObject> addOrder(@RequestBody Order order) {
-       OrderDTO orderDTO= orderService.addOrder(order);
-       ResponseObject<OrderDTO> responseObject=new ResponseObject<>("success",orderDTO);
-       return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
+    public ResponseEntity<ResponseObject> addOrder(@RequestBody Order order) {
+        OrderDTO orderDTO = orderService.addOrder(order);
+        ResponseObject<OrderDTO> responseObject = new ResponseObject<>("success", orderDTO);
+        return new ResponseEntity<>(responseObject, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -65,8 +69,8 @@ public class OrderController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseObject> updateOrder(@RequestBody Order order, @PathVariable int id) {
-       OrderDTO orderDTO= orderService.updateOrderById(order,id);
-       ResponseObject<OrderDTO> responseObject=new ResponseObject<>("success",orderDTO);
-       return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
+        OrderDTO orderDTO = orderService.updateOrderById(order, id);
+        ResponseObject<OrderDTO> responseObject = new ResponseObject<>("success", orderDTO);
+        return new ResponseEntity<>(responseObject, HttpStatus.CREATED);
     }
 }

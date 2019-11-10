@@ -5,13 +5,13 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "ORDER_PRODUCT")
-public class OrderProduct  {
+public class OrderProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @Column(name = "order_Id")
     private int orderId;
-    @Column(name="product_Id")
+    @Column(name = "product_Id")
     private int productId;
     @Column(name = "quantity")
     private int productQuantity;
@@ -22,11 +22,11 @@ public class OrderProduct  {
     private String description;
     private boolean isActive;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id",nullable = false,insertable = false,updatable = false)
+    @JoinColumn(name = "order_id", nullable = false, insertable = false, updatable = false)
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="product_id",nullable = false,insertable = false,updatable = false)
+    @JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
     private Product product;
 
     public int getId() {

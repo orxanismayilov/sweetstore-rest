@@ -8,12 +8,12 @@ public class InvalidOrderProductException extends RuntimeException {
     }
 
     public InvalidOrderProductException(Object param) {
-        this.param=param;
+        this.param = param;
     }
 
     public InvalidOrderProductException(String message, Object param) {
         super(message);
-        this.param=param;
+        this.param = param;
     }
 
     public Object getParam() {

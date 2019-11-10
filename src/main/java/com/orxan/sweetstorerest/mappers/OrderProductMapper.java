@@ -3,11 +3,11 @@ package com.orxan.sweetstorerest.mappers;
 import com.orxan.sweetstorerest.dtos.OrderProductDTO;
 import com.orxan.sweetstorerest.model.OrderProduct;
 
-public class OrderProductMapper  {
+public class OrderProductMapper {
 
 
     public OrderProductDTO mapOrderProductDTO(OrderProduct orderProduct) {
-        OrderProductDTO dto=new OrderProductDTO();
+        OrderProductDTO dto = new OrderProductDTO();
         dto.setId(orderProduct.getId());
         dto.setOrderId(orderProduct.getOrderId());
         dto.setProductId(orderProduct.getProductId());
@@ -19,8 +19,5 @@ public class OrderProductMapper  {
         dto.setDescription(orderProduct.getDescription());
         dto.setActive(orderProduct.isActive());
         return dto;
-    }
-    public OrderProductMapper orderProductMapper(){
-        return new OrderProductMapper();
     }
 }

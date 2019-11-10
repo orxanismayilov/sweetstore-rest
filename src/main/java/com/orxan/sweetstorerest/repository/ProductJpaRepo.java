@@ -11,13 +11,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductJpaRepo extends JpaRepository<Product,Integer> {
+public interface ProductJpaRepo extends JpaRepository<Product, Integer> {
 
     @Query("Select new com.orxan.sweetstorerest.dtos.ProductDTO(p.id, p.name, p.quantity, p.updateDate, p.price, p.isActive)" +
             " FROM Product p WHERE p.isActive=true")
     List<ProductDTO> findByIsActiveTrue(Pageable pageable);
 
-    Product findFirstByName (String name);
+    Product findFirstByName(String name);
 
     @Query("SELECT new com.orxan.sweetstorerest.dtos.ProductDTO(p.id, p.name, p.quantity, p.updateDate, p.price, p.isActive)" +
             " FROM Product p WHERE p.quantity>:quantity and p.isActive=true")

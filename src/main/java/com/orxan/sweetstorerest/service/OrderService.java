@@ -16,7 +16,7 @@ public interface OrderService {
 
     OrderDTO getOrder(int id);
 
-    boolean deleteOrderByTransactionId(int transactionId);
+    void deleteOrderByTransactionId(int transactionId);
 
     OrderDTO updateOrderById(Order newOrder, int orderId);
 
