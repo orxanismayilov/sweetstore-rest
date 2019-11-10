@@ -1,24 +1,34 @@
 package com.orxan.sweetstorerest.controller;
 
 import com.orxan.sweetstorerest.dtos.UserDTO;
+import com.orxan.sweetstorerest.model.MyUserPrincipal;
 import com.orxan.sweetstorerest.model.ResponseObject;
-import com.orxan.sweetstorerest.model.User;
-import com.orxan.sweetstorerest.service.serviceimple.UserServiceImpl;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/login")
 public class UserController {
 
-    @Autowired
-    private UserServiceImpl userService;
+    private final MyUserPrincipal userPrincipal;
 
-    @PostMapping
-    public ResponseEntity login(@RequestBody User user) {
-        ResponseObject<UserDTO> responseObject=new ResponseObject<>("",userService.validateLogin(user));
+    private final ModelMapper mapper;
+
+    @Autowired
+    public UserController(MyUserPrincipal userPrincipal, ModelMapper mapper) {
+        this.userPrincipal = userPrincipal;
+        this.mapper = mapper;
+    }
+
+    @GetMapping
+    public ResponseEntity login() {
+        UserDTO userDTO=mapper.map(userPrincipal.getUser(),UserDTO.class);
+        ResponseObject<UserDTO> responseObject=new ResponseObject<>("success",userDTO);
         return new ResponseEntity(responseObject,HttpStatus.OK);
     }
 }

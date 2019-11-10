@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @LoggerAnnotation
-    public OrdersDTO getOrderList(int pageIndex, int rowsPerPage,String username) {
+    public OrdersDTO getOrderList(int pageIndex, int rowsPerPage) {
             OrdersDTO ordersDTO=new OrdersDTO();
             ordersDTO.setOrders(repo.findAllActiveOrders(createPageRequest(pageIndex,rowsPerPage)));
             ordersDTO.setCount(repo.countByIsActiveTrue());
@@ -40,26 +40,26 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @LoggerAnnotation
-    public OrderDTO addOrder(Order order, String username) {
+    public OrderDTO addOrder(Order order) {
         order.setUpdatedBy(1);
         return modelMapper.map(repo.save(order),OrderDTO.class);
     }
 
     @Override
     @LoggerAnnotation
-    public OrderDTO getOrder(int id,String username) {
+    public OrderDTO getOrder(int id) {
         return modelMapper.map(repo.findByIdAndIsActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("Order not found. Id="+id)),OrderDTO.class);
     }
 
     @Override
     @LoggerAnnotation
-    public List<OrderDTO> searchOrderById(String id, boolean searchAll, String username) {
+    public List<OrderDTO> searchOrderById(String id, boolean searchAll) {
         return searchAll ? repo.findAllByIdLike(id) : repo.findByIdLikeAndIsActiveTrue(id);
     }
 
     @Override
     @LoggerAnnotation
-    public boolean deleteOrderByTransactionId(int transactionId,String username) {
+    public boolean deleteOrderByTransactionId(int transactionId) {
         Order order=repo.findByIdAndIsActiveTrue(transactionId).orElseThrow(()->new ResourceNotFoundException("Order not found. Id="+transactionId));
         order.setActive(false);
         repo.save(order);
@@ -68,14 +68,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @LoggerAnnotation
-    public OrderDTO updateOrderById(Order newOrder, int orderId, String username) {
+    public OrderDTO updateOrderById(Order newOrder, int orderId) {
             newOrder.setId(orderId);
             return modelMapper.map(repo.save(newOrder),OrderDTO.class);
     }
 
     @Override
     @LoggerAnnotation
-    public int getTotalCountOfOrder(String username) {
+    public int getTotalCountOfOrder() {
             return repo.countByIsActiveTrue();
     }
 

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserJpaRepo jparepo;
+    private UserJpaRepo jpaRepo;
 
     public UserServiceImpl() {
     }
@@ -23,12 +23,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @LoggerAnnotation
     public UserDTO validateLogin(User user) {
-       User entity= jparepo.findFirstByName(user.getName());
+       User entity= jpaRepo.findFirstByNameAndIsActiveTrue(user.getName()).orElseThrow(()->new ResourceNotFoundException("User not found."));
         PasswordAuthentication encoder=new PasswordAuthentication();
        if (!encoder.authenticate(user.getPassword(),entity.getPassword())) throw new ResourceNotFoundException("User name or password is wrong.");
        ModelMapper mapper=new ModelMapper();
-       UserDTO userDto=mapper.map(entity,UserDTO.class);
-       return userDto;
+        return mapper.map(entity,UserDTO.class);
     }
 
     @Override
