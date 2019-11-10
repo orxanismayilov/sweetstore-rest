@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface OrderProductService {
 
-    OrderProduct saveOrderProduct(OrderProduct orderProduct,String username);
+    OrderProduct saveOrderProduct(OrderProduct orderProduct);
 
-    boolean removeOrderProductById(int id,String username);
+    boolean removeOrderProductById(int id);
 
-    OrderProductDTO getOrderProduct(int id, String username);
+    OrderProductDTO getOrderProduct(int id);
 
-    OrderProductsDTO getOrderProductByOrderId(int orderId,String username);
+    OrderProductsDTO getOrderProductByOrderId(int orderId);
 
-    OrderProductDTO updateOrderProduct(OrderProduct newOrderProduct, int id, String username);
+    OrderProductDTO updateOrderProduct(OrderProduct newOrderProduct, int id);
 
-    List<String> validateOrderProduct(OrderProduct orderProduct,String username);
+    List<String> validateOrderProduct(OrderProduct orderProduct);
 }

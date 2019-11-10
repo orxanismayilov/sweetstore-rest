@@ -50,17 +50,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @LoggerAnnotation
-    public ProductsDTO getProductList(int pageIndex, int rowsPerPage, String username) {
+    public ProductsDTO getProductList(int pageIndex, int rowsPerPage) {
         long startTime = System.currentTimeMillis();
         long usertime = System.currentTimeMillis();
         long diff = usertime - startTime;
         //logger.info("time difference :" + diff);
-        int totalCount = getTotalCountOfProduct(username);
+        int totalCount = getTotalCountOfProduct();
         long time = System.currentTimeMillis();
         diff = time - usertime;
         //logger.info("total count diff :" + diff);
-        int fromIndex = pageIndex * rowsPerPage;
-        int toIndex = Math.min(fromIndex + rowsPerPage, totalCount);
         ProductsDTO productsDTO = new ProductsDTO();
         long prList = System.currentTimeMillis();
         diff = prList - time;
@@ -75,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @LoggerAnnotation
-    public ProductDTO addProduct(Product product, String username) {
+    public ProductDTO addProduct(Product product) {
         List<String> errorList = isProductValid(product);
         if (errorList.isEmpty()) {
             Product checkProduct = jpaRepo.findFirstByName(product.getName());
@@ -93,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @LoggerAnnotation
-    public ProductDTO updateProduct(Product product, int oldProductId, String username) {
+    public ProductDTO updateProduct(Product product, int oldProductId) {
         if (jpaRepo.findById(oldProductId).isPresent()) {
             List<String> errorList = isProductValid(product);
             if (errorList.isEmpty()) {
@@ -146,7 +144,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @LoggerAnnotation
-    public boolean deleteProductByID(int id, String username) {
+    public boolean deleteProductByID(int id) {
         if (jpaRepo.findById(id).isPresent()) {
             jpaRepo.deleteById(id);
             return true;
@@ -155,19 +153,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @LoggerAnnotation
-    public ProductDTO getProductById(int id, String username) {
+    public ProductDTO getProductById(int id) {
         return modelMapper.map(jpaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found. Id="+String.valueOf(id))),ProductDTO.class);
     }
 
     @Override
     @LoggerAnnotation
-    public List<ProductDTO> getProductListInStock(String username) {
+    public List<ProductDTO> getProductListInStock() {
         return jpaRepo.findAllProductsByQuantity(0);
 }
 
     @Override
     @LoggerAnnotation
-    public int getTotalCountOfProduct(String username) {
+    public int getTotalCountOfProduct() {
         return jpaRepo.countByIsActiveTrue();
     }
 

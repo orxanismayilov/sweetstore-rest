@@ -8,19 +8,19 @@ import java.util.List;
 
 public interface ProductService {
 
-    ProductsDTO getProductList(int pageIndex, int rowsPerPage,String username);
+    ProductsDTO getProductList(int pageIndex, int rowsPerPage);
 
-    ProductDTO addProduct(Product product, String username);
+    ProductDTO addProduct(Product product);
 
-    ProductDTO updateProduct(Product product, int oldProductId,String username);
+    ProductDTO updateProduct(Product product, int oldProductId);
 
     List<String> isProductValid(Product product);
 
-    boolean deleteProductByID(int id,String username);
+    boolean deleteProductByID(int id);
 
-    ProductDTO getProductById(int id,String username);
+    ProductDTO getProductById(int id);
 
-    List<ProductDTO> getProductListInStock(String username);
+    List<ProductDTO> getProductListInStock();
 
-    int getTotalCountOfProduct(String username);
+    int getTotalCountOfProduct();
 }

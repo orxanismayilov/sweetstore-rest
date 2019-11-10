@@ -43,8 +43,8 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     @LoggerAnnotation
-    public OrderProduct saveOrderProduct(OrderProduct orderProduct,String username) {
-            List<String> errorList = validateOrderProduct(orderProduct, username);
+    public OrderProduct saveOrderProduct(OrderProduct orderProduct) {
+            List<String> errorList = validateOrderProduct(orderProduct);
             if (errorList.isEmpty()) {
                 return repo.save(orderProduct);
             } else throw new InvalidOrderProductException(errorList);
@@ -52,7 +52,7 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     @LoggerAnnotation
-    public boolean removeOrderProductById(int id,String username) {
+    public boolean removeOrderProductById(int id) {
         OrderProduct orderProduct=repo.findByIdAndIsActiveTrue(id).orElseThrow(()->new ResourceNotFoundException("OrderProduct not found.Id=" + id));
         orderProduct.setActive(false);
         repo.save(orderProduct);
@@ -61,13 +61,13 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     @LoggerAnnotation
-    public OrderProductDTO getOrderProduct(int id,String username) {
+    public OrderProductDTO getOrderProduct(int id) {
         return mapper.mapOrderProductDTO(repo.findByIdAndIsActiveTrue(id).orElseThrow(() -> new ResourceNotFoundException("OrderProduct not found="+id)));
     }
 
     @Override
     @LoggerAnnotation
-    public OrderProductsDTO getOrderProductByOrderId(int orderId, String username) {
+    public OrderProductsDTO getOrderProductByOrderId(int orderId) {
         OrderProductsDTO dto = new OrderProductsDTO();
         dto.setOrderProducts(repo.findByOrderId(orderId));
         dto.setSummary(repo.findOrderProductSummary(orderId));
@@ -76,8 +76,8 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     @LoggerAnnotation
-    public OrderProductDTO updateOrderProduct(OrderProduct newOrderProduct, int id, String username) {
-            List<String> errorList = validateOrderProduct(newOrderProduct, username);
+    public OrderProductDTO updateOrderProduct(OrderProduct newOrderProduct, int id) {
+            List<String> errorList = validateOrderProduct(newOrderProduct);
             if (errorList.isEmpty()) {
                 newOrderProduct.setId(id);
                 if (repo.existsById(id)) throw new ResourceNotFoundException("OrderProduct not found.Id=" + id);
@@ -87,9 +87,9 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Override
     @LoggerAnnotation
-    public List<String> validateOrderProduct(OrderProduct orderProduct,String username) {
+    public List<String> validateOrderProduct(OrderProduct orderProduct) {
         List<String> errorList=new ArrayList<>();
-        ProductDTO product= productService.getProductById(orderProduct.getProductId(),"");
+        ProductDTO product= productService.getProductById(orderProduct.getProductId());
 
         if (product != null) {
             if (orderProduct.getProductQuantity() <= 0) {

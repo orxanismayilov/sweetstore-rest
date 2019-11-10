@@ -21,52 +21,51 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ResponseObject> getAllProducts(@RequestParam int startPage,
-                                                         @RequestParam int rowsPerPage,
-                                                         @RequestParam String username) {
-        ProductsDTO productsDTO =productService.getProductList(startPage,rowsPerPage,username);
+                                                         @RequestParam int rowsPerPage) {
+        ProductsDTO productsDTO =productService.getProductList(startPage,rowsPerPage);
         ResponseObject<ProductsDTO> responseObject=new ResponseObject<>("success",productsDTO);
         return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @GetMapping("/in-stock")
-    public ResponseEntity<ResponseObject> getProductListInStock(@RequestParam String username) {
-        List<ProductDTO> list=productService.getProductListInStock(username);
+    public ResponseEntity<ResponseObject> getProductListInStock() {
+        List<ProductDTO> list=productService.getProductListInStock();
         ResponseObject<List<ProductDTO>> responseObject=new ResponseObject<>("success",list);
         return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> getProduct(@PathVariable int id,@RequestParam String username) {
-       ProductDTO product=productService.getProductById(id,username);
+    public ResponseEntity<ResponseObject> getProduct(@PathVariable int id) {
+       ProductDTO product=productService.getProductById(id);
        ResponseObject<ProductDTO> responseObject= new ResponseObject<>("success", product);
        return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @GetMapping("/count")
 
-    public ResponseEntity<ResponseObject> getTotalCount(@RequestParam String username){
-       int count= productService.getTotalCountOfProduct(username);
+    public ResponseEntity<ResponseObject> getTotalCount(){
+       int count= productService.getTotalCountOfProduct();
        ResponseObject<Integer> responseObject=new ResponseObject<>("success",count);
        return new ResponseEntity<>(responseObject,HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<ResponseObject> addProduct(@RequestBody Product product,@RequestParam String username) {
-       ProductDTO productAdded=productService.addProduct(product,username);
+    public ResponseEntity<ResponseObject> addProduct(@RequestBody Product product) {
+       ProductDTO productAdded=productService.addProduct(product);
        ResponseObject<ProductDTO> responseObject=new ResponseObject<>("success",productAdded);
        return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteProduct(@PathVariable int id,@RequestParam String username) {
-        productService.deleteProductByID(id,username);
+    public ResponseEntity deleteProduct(@PathVariable int id) {
+        productService.deleteProductByID(id);
         String message="Product deleted successfully.Id="+id;
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(message);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseObject> updateProduct(@RequestBody Product product,@PathVariable int id,@RequestParam String username) {
-        ProductDTO newProduct=productService.updateProduct(product,id,username);
+    public ResponseEntity<ResponseObject> updateProduct(@RequestBody Product product, @PathVariable int id) {
+        ProductDTO newProduct=productService.updateProduct(product,id);
         ResponseObject<ProductDTO> responseObject=new ResponseObject<>("success",newProduct);
         return new ResponseEntity<>(responseObject,HttpStatus.CREATED);
     }
